@@ -6,7 +6,7 @@
 /*   By: hrings <hrings@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 11:21:53 by hrings            #+#    #+#             */
-/*   Updated: 2022/11/16 21:58:16 by hrings           ###   ########.fr       */
+/*   Updated: 2024/02/01 11:16:58 by hrings           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ t_hit	check_cylinder_hit(t_minirt *minirt, t_object *obj)
 	result = get_t(abc.a, abc.b, abc.c);
 	if (result.type == NO)
 		return (result);
-	point = ray_point(minirt->cammera->position, minirt->ray->direction, \
+	point = ray_point(minirt->camera->position, minirt->ray->direction, \
 					result.distance);
 	point = sub_vector(&point, cylinder->base);
 	tmp = dot_product(&point, cylinder->axis);
@@ -121,7 +121,7 @@ static t_abc	get_abc(t_minirt *minirt, t_cylinder *cylinder)
 	t_abc		result;
 	t_vector	w;
 
-	w = sub_vector(minirt->cammera->position, cylinder->position);
+	w = sub_vector(minirt->camera->position, cylinder->position);
 	result.a = 1 - pow(dot_product(minirt->ray->direction, cylinder->axis), 2);
 	result.b = 2 * (dot_product(minirt->ray->direction, &w) - \
 					(dot_product(minirt->ray->direction, cylinder->axis) * \

@@ -6,7 +6,7 @@
 /*   By: hrings <hrings@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/29 11:56:39 by hrings            #+#    #+#             */
-/*   Updated: 2024/01/26 23:52:05 by hrings           ###   ########.fr       */
+/*   Updated: 2024/02/01 11:14:51 by hrings           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,9 @@
 # include <stdio.h>
 # include <libft.h>
 # include <math.h>
+# include <fcntl.h>
 # include "keys.h"
+# include "error.h"
 # define TITLE "Minirt Project"
 
 #define WIDTH 1200
@@ -133,6 +135,8 @@ typedef struct s_ray
 typedef struct s_minirt
 {
 	char		*filename;
+	int			fd;
+	int			error;
 	int			height;
 	int			width;
 	void		*mlx;
@@ -144,8 +148,12 @@ typedef struct s_minirt
 	int			endian;
 	t_vector	*up_vector;
 	t_lst_obj	*objects;
-	t_camera	*cammera;
+	t_camera	*camera;
 	t_ray		*ray;
+	bool		amlight;
+	bool		cam;
+	bool		light;
+	
 }	t_minirt;
 
 //draw.c
@@ -188,4 +196,8 @@ t_hit check_cylinder_hit(t_minirt *minirt, t_object *obj);
 void cal_ino_cylinder(t_cylinder *cylinder);
 //plane.c
 t_hit check_plane_hit(t_minirt *minirt, t_object *obj);
+//input.c
+void	readinput(t_minirt *minirt);
+//error.c
+void handelerror(t_minirt *minirt);
 #endif

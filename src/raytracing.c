@@ -6,7 +6,7 @@
 /*   By: hrings <hrings@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 11:43:55 by hrings            #+#    #+#             */
-/*   Updated: 2024/01/27 00:19:35 by hrings           ###   ########.fr       */
+/*   Updated: 2024/02/01 11:16:37 by hrings           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ t_hit	check_sphere_hit(t_minirt *minirt, t_object *obj)
 	double		dis;
 
 	sphere = obj->specs;
-	oc = sub_vector(minirt->cammera->position, sphere->position);
+	oc = sub_vector(minirt->camera->position, sphere->position);
 	b = dot_product(minirt->ray->direction, &oc);
 	c = dot_product(&oc, &oc) - sphere->diameter * sphere->diameter;
 	dis = b * b - c;
@@ -81,7 +81,7 @@ static int	get_color(t_minirt *minirt, t_hit *hit)
 	{
 		sphere = (t_sphere *)hit->hit->specs;
 		tmp = scalar_product(minirt->ray->direction, hit->distance);
-		tmp = add_vector(minirt->cammera->position, &tmp);
+		tmp = add_vector(minirt->camera->position, &tmp);
 		tmp = sub_vector(&tmp, sphere->position);
 		norm_vector(&tmp);
 		result =
@@ -93,7 +93,7 @@ static int	get_color(t_minirt *minirt, t_hit *hit)
 	{
 		cylinder = (t_cylinder *)hit->hit->specs;
 		point = scalar_product(minirt->ray->direction, hit->distance);
-		point = add_vector(minirt->cammera->position, &point);
+		point = add_vector(minirt->camera->position, &point);
 		tmp = sub_vector(&point, cylinder->base);
 		tmp = scalar_product(cylinder->axis, dot_product(&tmp, cylinder->axis));
 		tmp = add_vector(cylinder->base, &tmp);
@@ -127,7 +127,7 @@ static void	get_s_and_dir(t_minirt *minirt, int row, int col)
 	minirt->ray->s = init_vector(a);
 	if (minirt->ray->direction)
 		free(minirt->ray->direction);
-	a = sub_vector(minirt->ray->s, minirt->cammera->position);
+	a = sub_vector(minirt->ray->s, minirt->camera->position);
 	minirt->ray->direction = init_vector(a);
 	norm_vector(minirt->ray->direction);
 }

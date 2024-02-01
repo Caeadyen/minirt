@@ -6,7 +6,7 @@
 /*   By: hrings <hrings@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 22:59:57 by hrings            #+#    #+#             */
-/*   Updated: 2022/11/16 23:22:12 by hrings           ###   ########.fr       */
+/*   Updated: 2024/02/01 11:17:10 by hrings           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ t_hit check_plane_hit(t_minirt *minirt, t_object *obj)
 	divisor = dot_product(plane->normal, minirt->ray->direction);
 	if (divisor == 0)
 		return (result);
-	tmp = sub_vector(plane->position, minirt->cammera->position);
+	tmp = sub_vector(plane->position, minirt->camera->position);
 	t = dot_product(plane->normal, &tmp) / divisor;
 	if (t <= 0)
 		return (result);

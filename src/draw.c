@@ -6,7 +6,7 @@
 /*   By: hrings <hrings@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/29 15:58:12 by hrings            #+#    #+#             */
-/*   Updated: 2024/01/26 23:42:15 by hrings           ###   ########.fr       */
+/*   Updated: 2024/02/01 11:16:14 by hrings           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ static void	init_ray(t_minirt *minirt)
 	if (!ray)
 		exit(1);
 	minirt->ray = ray;
-	tmp = scalar_product(minirt->cammera->orientation, -1);
+	tmp = scalar_product(minirt->camera->orientation, -1);
 	ray->n = init_vector(tmp);
 	norm_vector(ray->n);
 	tmp = cross_vector(minirt->up_vector, ray->n);
@@ -73,7 +73,7 @@ static t_vector	*get_l_position(t_minirt *minirt)
 	t_vector	d;
 
 	a = scalar_product(minirt->ray->n, minirt->ray->d);
-	c = sub_vector(minirt->cammera->position, &a);
+	c = sub_vector(minirt->camera->position, &a);
 	a = scalar_product(minirt->ray->u, minirt->width / 2);
 	b = scalar_product(minirt->ray->v, minirt->height / 2);
 	d = sub_vector(&c, &a);
@@ -85,6 +85,6 @@ static double	get_d(t_minirt *minirt)
 {
 	double	result;
 
-	result = minirt->width / (2 * tan(minirt->cammera->fov * (M_PI / 180) / 2));
+	result = minirt->width / (2 * tan(minirt->camera->fov * (M_PI / 180) / 2));
 	return (result);
 }

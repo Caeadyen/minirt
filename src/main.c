@@ -6,7 +6,7 @@
 /*   By: hrings <hrings@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/29 12:00:09 by hrings            #+#    #+#             */
-/*   Updated: 2024/01/27 00:31:16 by hrings           ###   ########.fr       */
+/*   Updated: 2024/02/01 11:15:55 by hrings           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,14 @@ int	main(int argc, char **argv)
 
 	if (argc == 2)
 	{
-		minirt = (t_minirt *)malloc(sizeof(t_minirt));
+		minirt = (t_minirt *)ft_calloc(1, sizeof(t_minirt));
 		if (!minirt)
 			return (1);
-		
 		minirt->filename = argv[1];
-		
+		readinput(minirt);
+		ft_putnbr_fd(minirt->error,1);
+		if (minirt->error)
+			handelerror(minirt);
 		minirt->mlx = mlx_init(WIDTH, HEIGHT, TITLE, true);
 		initminirt(minirt);
 		addobj(minirt);
@@ -51,9 +53,9 @@ static void	close_win(t_minirt *minirt)
 {
 	clear_obj_lst(minirt);
 	free(minirt->up_vector);
-	free(minirt->cammera->orientation);
-	free(minirt->cammera->position);
-	free(minirt->cammera);
+	free(minirt->camera->orientation);
+	free(minirt->camera->position);
+	free(minirt->camera);
 	free(minirt);
 }
 
@@ -157,5 +159,5 @@ static void	addcam(t_minirt *minirt)
 	cam->position = position;
 	cam->orientation = oritantion;
 	cam->fov = 90;
-	minirt->cammera = cam;
+	minirt->camera = cam;
 }

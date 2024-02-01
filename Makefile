@@ -6,7 +6,7 @@
 #    By: hrings <hrings@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/19 14:17:49 by hrings            #+#    #+#              #
-#    Updated: 2024/01/27 00:18:00 by hrings           ###   ########.fr        #
+#    Updated: 2024/01/31 12:13:23 by hrings           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -38,7 +38,8 @@ FT_LNK	= ./libft/libft.a
 
 
 SRCS := main.c draw.c raytracing.c cleanup.c lst_obj.c utilities.c \
-		vector_3d.c make_obj.c color.c cylinder.c plane.c
+		vector_3d.c make_obj.c color.c cylinder.c plane.c input.c \
+		error.c
 
 OBJECTS := $(SRCS:.c=.o)
 OBJECTS_PREFIXED := $(addprefix $(OBJDIR), $(OBJECTS))
