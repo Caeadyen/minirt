@@ -6,7 +6,7 @@
 /*   By: hrings <hrings@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/31 11:58:03 by hrings            #+#    #+#             */
-/*   Updated: 2024/02/01 09:32:31 by hrings           ###   ########.fr       */
+/*   Updated: 2024/02/01 11:45:34 by hrings           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,27 +50,28 @@ static void openfile(t_minirt *minirt)
 static void readfile(t_minirt *minirt)
 {
 	char	*line;
-
+	char	*tmp;
 	line = get_next_line(minirt->fd);
 	while (line)
 	{
-		if (*line != '\n')
-		{
-		if (!ft_strncmp(line, "A ", 2))
-			addamlight(minirt, line);
-		else if (!ft_strncmp(line, "C ", 2))
-			addcamera(minirt, line);
-		else if (!ft_strncmp(line, "L ", 2))
-			addlight(minirt, line);
+		tmp = ft_strtrim(line, " \n");
+		free(line);
+		if (!ft_strncmp(tmp, "A ", 2))
+			addamlight(minirt, tmp);
+		else if (!ft_strncmp(tmp, "C ", 2))
+			addcamera(minirt, tmp);
+		else if (!ft_strncmp(tmp, "L ", 2))
+			addlight(minirt, tmp);
 		// if (ft_strncmp(line, "A ", 2))
 		// 	addamlight(minirt, line);
 		else
-			ft_putstr_fd(line,1);
-		}
-		free(line);
+			ft_putstr_fd("empty line\n",1);
+		free(tmp);
+		if (minirt->error)
+			break ;
 		line = get_next_line(minirt->fd);
 	}
-	minirt->error = PARSINGERROR;
+	// minirt->error = PARSINGERROR;
 }
 
 static void addamlight(t_minirt *minirt, char *line)
@@ -79,17 +80,25 @@ static void addamlight(t_minirt *minirt, char *line)
 
 	ft_putstr_fd("am light found\n",1);
 	tmp = ft_split(line + 2, ' ');
+	//ft_putstr_fd(tmp[1],1);
+	if (tmp[2] != 0)
+		minirt->error = AMLIGHTFORMAT;
+	else
+	{
+		
 	
 	while (*tmp)
 	{
 		ft_putstr_fd(*tmp,1);
 		ft_putstr_fd("\n",1);
+		free(*tmp);
 		tmp++;
 		
 	}
-	
+	}
+
 	ft_putstr_fd("\n",1);
-	minirt->error = PARSINGERROR;
+	//minirt->error = PARSINGERROR;
 }
 static void addcamera(t_minirt *minirt, char *line)
 {
