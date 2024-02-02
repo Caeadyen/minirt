@@ -6,7 +6,7 @@
 /*   By: hrings <hrings@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/29 11:56:39 by hrings            #+#    #+#             */
-/*   Updated: 2024/02/02 16:32:32 by hrings           ###   ########.fr       */
+/*   Updated: 2024/02/02 19:46:47 by hrings           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,19 @@ typedef struct s_camera
 	t_vector	*orientation;
 	double		fov;
 }	t_camera;
+
+typedef struct s_light
+{
+	t_vector	*position;
+	int	color;
+	double		brightness;
+}	t_light;
+
+typedef struct s_amlight
+{
+	int	color;
+	double		ratio;
+}	t_amlight;
 
 typedef struct s_lst_obj
 {
@@ -149,12 +162,9 @@ typedef struct s_minirt
 	t_vector	*up_vector;
 	t_lst_obj	*objects;
 	t_camera	*camera;
+	t_light		*light;
 	t_ray		*ray;
-	bool		iamlight;
-	bool		cam;
-	bool		light;
-	double		amlight;
-	
+	t_amlight	*amlight;
 }	t_minirt;
 
 //draw.c
@@ -183,16 +193,18 @@ t_vector add_vector(t_vector *a, t_vector *b);
 t_vector sub_vector(t_vector *a, t_vector *b);
 void assign_vec(t_vector *a, t_vector b);
 t_vector	ray_point(t_vector *start, t_vector *dir, double t);
+bool	checknormalized(t_vector *v);
+
 //make_obj
 t_sphere *make_sphere(t_vector position, double dia, int color);
 t_cylinder *make_cylinder(t_vector position, t_vector direction, t_info info);
 t_plane *make_plane(t_vector position, t_vector normal, int color);
 //color.c
-int	get_trans(int trgb);
+int	get_a(int trgb);
 int	get_r(int trgb);
 int	get_g(int trgb);
 int	get_b(int trgb);
-int	create_trgb(int t, int r, int g, int b);
+int get_rgba(int r, int g, int b, int a);
 //cylinder.c
 t_hit check_cylinder_hit(t_minirt *minirt, t_object *obj);
 void cal_ino_cylinder(t_cylinder *cylinder);
@@ -209,4 +221,8 @@ void	addlight(t_minirt *minirt, char *line);
 //parser.c
 double ft_strtof(t_minirt *minirt, char *str, int error);
 bool	checkdrange(double value, double min, double max);
+bool	checkirange(int value, int min, int max);
+int	parsecolor(t_minirt *minirt, char *str, int error);
+t_vector *parsevector(t_minirt *minirt, char *str, int error);
+
 #endif

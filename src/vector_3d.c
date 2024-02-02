@@ -6,7 +6,7 @@
 /*   By: hrings <hrings@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/02 16:37:26 by hrings            #+#    #+#             */
-/*   Updated: 2024/02/02 16:38:01 by hrings           ###   ########.fr       */
+/*   Updated: 2024/02/02 19:37:17 by hrings           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,4 +94,14 @@ t_vector	ray_point(t_vector *start, t_vector *dir, double t)
 	result = scalar_product(dir, t);
 	result = add_vector(start, &result);
 	return (result);
+}
+
+bool	checknormalized(t_vector *v)
+{
+	double length;
+
+	length = sqrt(v->x * v->x + v->y * v->y + v->z * v->z);
+	if (length == 1)
+		return (false);
+	return (true);
 }

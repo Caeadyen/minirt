@@ -6,7 +6,7 @@
 /*   By: hrings <hrings@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 11:43:55 by hrings            #+#    #+#             */
-/*   Updated: 2024/02/02 16:59:48 by hrings           ###   ########.fr       */
+/*   Updated: 2024/02/02 17:38:57 by hrings           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ static int	get_color(t_minirt *minirt, t_hit *hit)
 		tmp = sub_vector(&tmp, sphere->position);
 		norm_vector(&tmp);
 		result =
-			create_trgb(0 , get_r(sphere->color) * ((tmp.y + 1) * 0.5) ,\
+			get_rgba(0 , get_r(sphere->color) * ((tmp.y + 1) * 0.5) ,\
 			get_g(sphere->color) * ((tmp.y + 1) * 0.5), \
 			get_b(sphere->color) * ((tmp.y + 1) * 0.5));
 	}
@@ -99,7 +99,7 @@ static int	get_color(t_minirt *minirt, t_hit *hit)
 		tmp = add_vector(cylinder->base, &tmp);
 		tmp = sub_vector(&point, &tmp);
 		norm_vector(&tmp);
-		result = create_trgb(0 , get_r(cylinder->color) * ((tmp.y + 1) * 0.5) ,\
+		result = get_rgba(0 , get_r(cylinder->color) * ((tmp.y + 1) * 0.5) ,\
 			get_g(cylinder->color) * ((tmp.y + 1) * 0.5), \
 			get_b(cylinder->color) * ((tmp.y + 1) * 0.5));	
 	}

@@ -6,7 +6,7 @@
 /*   By: hrings <hrings@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/29 12:00:09 by hrings            #+#    #+#             */
-/*   Updated: 2024/02/02 16:36:45 by hrings           ###   ########.fr       */
+/*   Updated: 2024/02/02 19:49:24 by hrings           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,8 @@ static void	close_win(t_minirt *minirt)
 	free(minirt->camera->orientation);
 	free(minirt->camera->position);
 	free(minirt->camera);
+	if (minirt->amlight)
+		free(minirt->amlight);
 	free(minirt);
 }
 
