@@ -6,7 +6,7 @@
 /*   By: hrings <hrings@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/29 11:56:39 by hrings            #+#    #+#             */
-/*   Updated: 2024/02/01 11:14:51 by hrings           ###   ########.fr       */
+/*   Updated: 2024/02/02 16:32:32 by hrings           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,9 +150,10 @@ typedef struct s_minirt
 	t_lst_obj	*objects;
 	t_camera	*camera;
 	t_ray		*ray;
-	bool		amlight;
+	bool		iamlight;
 	bool		cam;
 	bool		light;
+	double		amlight;
 	
 }	t_minirt;
 
@@ -171,6 +172,7 @@ void	clear_obj_lst(t_minirt *minirt);
 void		key_press(void* param);
 double min_double(double a, double b);
 double max_double(double a, double b);
+void	ft_free(char **array);
 //vector_3d.c
 t_vector *init_vector(t_vector a);
 t_vector cross_vector(t_vector *a, t_vector *b);
@@ -200,4 +202,11 @@ t_hit check_plane_hit(t_minirt *minirt, t_object *obj);
 void	readinput(t_minirt *minirt);
 //error.c
 void handelerror(t_minirt *minirt);
+//addelement.c
+void	addamlight(t_minirt *minirt, char *line);
+void	addcamera(t_minirt *minirt, char *line);
+void	addlight(t_minirt *minirt, char *line);
+//parser.c
+double ft_strtof(t_minirt *minirt, char *str, int error);
+bool	checkdrange(double value, double min, double max);
 #endif

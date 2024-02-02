@@ -6,16 +6,16 @@
 /*   By: hrings <hrings@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/31 12:12:49 by hrings            #+#    #+#             */
-/*   Updated: 2024/02/01 11:17:24 by hrings           ###   ########.fr       */
+/*   Updated: 2024/02/02 17:04:57 by hrings           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minirt.h>
 
-static void printerror(int num);
-static void freeupall(t_minirt *minirt);
+static void	printerror(int num);
+static void	freeupall(t_minirt *minirt);
 
-void handelerror(t_minirt *minirt)
+void	handelerror(t_minirt *minirt)
 {
 	int	error;
 
@@ -25,14 +25,13 @@ void handelerror(t_minirt *minirt)
 	exit(error);
 }
 
-static void printerror(int num)
+static void	printerror(int num)
 {
 	if (num == WRONGEXT)
 		ft_putstr_fd("Wrong file extension, need to be .rt\n", 2);
-	
 }
 
-static void freeupall(t_minirt *minirt)
+static void	freeupall(t_minirt *minirt)
 {
 	if (minirt)
 	{
@@ -47,11 +46,11 @@ static void freeupall(t_minirt *minirt)
 			free(minirt->up_vector);
 		if (minirt->camera)
 		{
-		if (minirt->camera->orientation)
-			free(minirt->camera->orientation);
-		if (minirt->camera->position)
-			free(minirt->camera->position);
-		free(minirt->camera);
+			if (minirt->camera->orientation)
+				free(minirt->camera->orientation);
+			if (minirt->camera->position)
+				free(minirt->camera->position);
+			free(minirt->camera);
 		}
 		free(minirt);
 	}

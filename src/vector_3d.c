@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   vector_3d->c                                        :+:      :+:    :+:   */
+/*   vector_3d.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: hrings <hrings@student->42->fr>              +#+  +:+       +#+        */
+/*   By: hrings <hrings@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2022/11/11 12:27:52 by hrings            #+#    #+#             */
-/*   Updated: 2022/11/14 11:34:36 by hrings           ###   ########->fr       */
+/*   Created: 2024/02/02 16:37:26 by hrings            #+#    #+#             */
+/*   Updated: 2024/02/02 16:38:01 by hrings           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,7 @@ t_vector	sub_vector(t_vector *a, t_vector *b)
 	return (result);
 }
 
-void assign_vec(t_vector *a, t_vector b)
+void	assign_vec(t_vector *a, t_vector b)
 {
 	a->x = b.x;
 	a->y = b.y;

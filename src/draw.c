@@ -6,7 +6,7 @@
 /*   By: hrings <hrings@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/29 15:58:12 by hrings            #+#    #+#             */
-/*   Updated: 2024/02/01 11:16:14 by hrings           ###   ########.fr       */
+/*   Updated: 2024/02/02 17:03:29 by hrings           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,6 @@ void	drawing(t_minirt *minirt)
 	clean_up_ray(minirt);
 	mlx_image_to_window(minirt->mlx, minirt->img, 0, 0);
 }
-
 
 static void	init_ray(t_minirt *minirt)
 {

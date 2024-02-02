@@ -6,7 +6,7 @@
 /*   By: hrings <hrings@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 11:43:55 by hrings            #+#    #+#             */
-/*   Updated: 2024/02/01 11:16:37 by hrings           ###   ########.fr       */
+/*   Updated: 2024/02/02 16:59:48 by hrings           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ t_hit	check_sphere_hit(t_minirt *minirt, t_object *obj)
 	b = dot_product(minirt->ray->direction, &oc);
 	c = dot_product(&oc, &oc) - sphere->diameter * sphere->diameter;
 	dis = b * b - c;
-	return (get_t(b , dis));
+	return (get_t(b, dis));
 }
 
 static int	get_color(t_minirt *minirt, t_hit *hit)
@@ -132,11 +132,11 @@ static void	get_s_and_dir(t_minirt *minirt, int row, int col)
 	norm_vector(minirt->ray->direction);
 }
 
-static t_hit get_t(double b , double dis)
+static t_hit	get_t(double b, double dis)
 {
 	t_hit	result;
-	double result1;
-	double result2;
+	double	result1;
+	double	result2;
 
 	result.type = NO;
 	if (dis < 0)
@@ -146,16 +146,11 @@ static t_hit get_t(double b , double dis)
 	result1 -= b;
 	if (result1 < 0 && result2 < 0)
 		return (result);
-	else if (result1 < 0)
-	{
-		result.type = INSIDE;
+	result.type = INSIDE;
+	if (result1 < 0)
 		result.distance = result2;
-	}
 	else if (result2 < 0)
-	{
-		result.type = INSIDE;
 		result.distance = result1;
-	}
 	else
 	{
 		result.type = OUTSIDE;
