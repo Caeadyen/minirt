@@ -6,7 +6,7 @@
 /*   By: hrings <hrings@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/31 11:58:03 by hrings            #+#    #+#             */
-/*   Updated: 2024/02/02 16:28:08 by hrings           ###   ########.fr       */
+/*   Updated: 2024/02/02 21:37:30 by hrings           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,6 @@ static void	checkfileext(t_minirt *minirt);
 static void	openfile(t_minirt *minirt);
 static void	readfile(t_minirt *minirt);
 
-// static void addobj(t_minirt *minirt, char *line, enum e_obj_type type);
 
 void	readinput(t_minirt *minirt)
 {
@@ -61,70 +60,17 @@ static void	readfile(t_minirt *minirt)
 			addcamera(minirt, tmp);
 		else if (!ft_strncmp(tmp, "L ", 2))
 			addlight(minirt, tmp);
-		else
-			ft_putstr_fd("empty line\n", 1);
+		else if (!ft_strncmp(tmp, "pl ", 3))
+			addobj(minirt, tmp, PLANE);
+		else if (!ft_strncmp(tmp, "sp ", 3))
+			addobj(minirt, tmp, SPHERE);
+		else if (!ft_strncmp(tmp, "cy ", 3))
+			addobj(minirt, tmp, CYLINDER);
+		else if (ft_strlen(tmp))
+			minirt->error = PARSINGERROR;
 		free(tmp);
 		if (minirt->error)
 			break ;
 		line = get_next_line(minirt->fd);
 	}
 }
-
-// static void	addobj(t_minirt *minirt, char *line, enum e_obj_type type)
-// {
-// 	t_vector	position;
-// 	t_vector	direction;
-// 	t_object	*object;
-// 	t_info		info;
-// 	double		dia;
-// 	int			color;
-// 	if (type == SPHERE)
-// 	{
-// 	object = (t_object *)malloc(sizeof(t_object));
-// 	if (!object)
-// 		exit(1);
-// 	position.x = 0;
-// 	position.y = 0;
-// 	position.z = 0;
-// 	dia = 30;
-// 	color = 255 << 8;
-// 	object->specs = make_sphere(position, dia, color);
-// 	object->type = SPHERE;
-// 	lst_obj_push(minirt, object);
-// 	}
-// 	else if (type == CYLINDER)
-// 	{
-// 	object = (t_object *)malloc(sizeof(t_object));
-// 	if (!object)
-// 		exit(1);
-// 	position.x = 0;
-// 	position.y = 0;
-// 	position.z = 0;
-// 	direction.x = 0;
-// 	direction.y = 0;
-// 	direction.z = 1;
-// 	norm_vector(&direction);
-// 	info.dia = 20;
-// 	info.color = 255 << 16;
-// 	info.height = 100;
-// 	object->specs = make_cylinder(position, direction, info);
-// 	object->type = CYLINDER;
-// 	lst_obj_push(minirt, object);
-// 	}
-// 	else if (type == PLANE)
-// 	{
-// 	object = (t_object *)malloc(sizeof(t_object));
-// 	if (!object)
-// 		exit(1);
-// 	color = 255 << 16;
-// 	direction.x = -1;
-// 	direction.y = 0;
-// 	direction.z = 0;
-// 	position.x = 20;
-// 	position.y = 0;
-// 	position.z = 0;	
-// 	object->specs = make_plane(position, direction, color);
-// 	object->type = PLANE;
-// 	lst_obj_push(minirt, object);
-// 	}
-// }

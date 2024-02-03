@@ -6,7 +6,7 @@
 #    By: hrings <hrings@student.42.fr>              +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/12/19 14:17:49 by hrings            #+#    #+#              #
-#    Updated: 2024/02/02 16:32:04 by hrings           ###   ########.fr        #
+#    Updated: 2024/02/03 22:46:03 by hrings           ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -22,7 +22,7 @@ LIBMLX	:= ./MLX42
 MLX_INC	= -I $(LIBMLX)/include
 MLX_LNK	= $(LIBMLX)/build/libmlx42.a -ldl -lglfw -pthread -lm
 
-CFLAGS = -Wextra -Wall -Werror -Wunreachable-code -Ofast -g3 -fsanitize=address
+CFLAGS = -Wextra -Wall -Werror -Wunreachable-code -Ofast -g3 #-fsanitize=address
 LIBRARIES = $(FT_LNK) $(MLX_LNK)
 INCLUDES = $(MLX_INC) $(FT_INC)
 
@@ -39,7 +39,7 @@ FT_LNK	= ./libft/libft.a
 
 SRCS := main.c draw.c raytracing.c cleanup.c lst_obj.c utilities.c \
 		vector_3d.c make_obj.c color.c cylinder.c plane.c input.c \
-		error.c addelement.c parser.c
+		error.c addelement.c parser.c addobject.c shading.c shadow.c
 
 OBJECTS := $(SRCS:.c=.o)
 OBJECTS_PREFIXED := $(addprefix $(OBJDIR), $(OBJECTS))

@@ -6,18 +6,18 @@
 /*   By: hrings <hrings@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 11:21:53 by hrings            #+#    #+#             */
-/*   Updated: 2024/02/01 11:16:58 by hrings           ###   ########.fr       */
+/*   Updated: 2024/02/03 23:00:23 by hrings           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minirt.h>
 
 static t_hit	get_t(double a, double b, double c);
-static t_hit	check_base_hit(t_minirt *minirt, t_cylinder *cylinder);
-static t_hit	check_base_top(t_minirt *minirt, t_cylinder *cylinder);
-static t_abc	get_abc(t_minirt *minirt, t_cylinder *cylinder);
+static t_hit	check_base_hit(t_cylinder *cylinder);
+static t_hit	check_base_top(t_cylinder *cylinder);
+static t_abc	get_abc(t_ray *ray, t_cylinder *cylinder);
 
-t_hit	check_cylinder_hit(t_minirt *minirt, t_object *obj)
+t_hit	check_cylinder_hit(t_ray *ray, t_object *obj)
 {
 	t_cylinder	*cylinder;
 	t_vector	point;
@@ -26,18 +26,18 @@ t_hit	check_cylinder_hit(t_minirt *minirt, t_object *obj)
 	double		tmp;
 
 	cylinder = (t_cylinder *)obj->specs;
-	abc = get_abc(minirt, cylinder);
+	abc = get_abc(ray, cylinder);
 	result = get_t(abc.a, abc.b, abc.c);
 	if (result.type == NO)
 		return (result);
-	point = ray_point(minirt->camera->position, minirt->ray->direction, \
+	point = ray_point(&ray->pos, &ray->direction, \
 					result.distance);
 	point = sub_vector(&point, cylinder->base);
 	tmp = dot_product(&point, cylinder->axis);
 	if (tmp < 0)
-		return (check_base_hit(minirt, cylinder));
+		return (check_base_hit(cylinder));
 	else if (tmp > cylinder->height)
-		return (check_base_top(minirt, cylinder));
+		return (check_base_top(cylinder));
 	else
 		result.where = MANTLE;
 	return (result);
@@ -96,35 +96,35 @@ static t_hit	get_t(double a, double b, double c)
 	return (result);
 }
 
-t_hit	check_base_hit(t_minirt *minirt, t_cylinder *cylinder)
+t_hit	check_base_hit(t_cylinder *cylinder)
 {
 	t_hit	result;
 
 	result.type = NO;
 	result.where = BASE;
-	result.distance = minirt->height * cylinder->height;
+	result.distance = cylinder->height;
 	return (result);
 }
 
-t_hit	check_base_top(t_minirt *minirt, t_cylinder *cylinder)
+t_hit	check_base_top(t_cylinder *cylinder)
 {
 	t_hit	result;
 
 	result.type = NO;
 	result.where = TOP;
-	result.distance = minirt->height * cylinder->height;
+	result.distance = cylinder->height;
 	return (result);
 }
 
-static t_abc	get_abc(t_minirt *minirt, t_cylinder *cylinder)
+static t_abc	get_abc(t_ray *ray, t_cylinder *cylinder)
 {
 	t_abc		result;
 	t_vector	w;
 
-	w = sub_vector(minirt->camera->position, cylinder->position);
-	result.a = 1 - pow(dot_product(minirt->ray->direction, cylinder->axis), 2);
-	result.b = 2 * (dot_product(minirt->ray->direction, &w) - \
-					(dot_product(minirt->ray->direction, cylinder->axis) * \
+	w = sub_vector(&ray->pos, cylinder->position);
+	result.a = 1 - pow(dot_product(&ray->direction, cylinder->axis), 2);
+	result.b = 2 * (dot_product(&ray->direction, &w) - \
+					(dot_product(&ray->direction, cylinder->axis) * \
 					dot_product(&w, cylinder->axis)));
 	result.c = dot_product(&w, &w) - \
 				pow(dot_product(&w, cylinder->axis), 2) - \

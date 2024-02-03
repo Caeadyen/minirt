@@ -6,7 +6,7 @@
 /*   By: hrings <hrings@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/31 12:12:49 by hrings            #+#    #+#             */
-/*   Updated: 2024/02/02 19:50:00 by hrings           ###   ########.fr       */
+/*   Updated: 2024/02/03 15:16:23 by hrings           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ static void	printerror(int num)
 	else if (num == FILENOTFOUND)
 		ft_putstr_fd("Could not open the file\n", 2);
 	else if (num == PARSINGERROR)
-		ft_putstr_fd("Error while parsing the file\n", 2);
+		ft_putstr_fd("Error while parsing the file, found unknown item\n", 2);
 	else if (num == AMLIGHTFORMAT)
 		ft_putstr_fd("To many elements for Ambient light\n", 2);
 	else if (num == AMLIGHTRATIO)
@@ -43,6 +43,8 @@ static void	printerror(int num)
 		ft_putstr_fd("ambient lighting ratio needs to be between 0 and 1\n", 2);
 	else if (num == AMLIGHTCOLOR)
 		ft_putstr_fd("ambient lighting color is wrong\n", 2);
+	else
+		printf("Error number: %i \n", num);
 }
 
 static void	freeupall(t_minirt *minirt)
@@ -68,6 +70,13 @@ static void	freeupall(t_minirt *minirt)
 		}
 		if (minirt->amlight)
 			free(minirt->amlight);
+		if (minirt->light)
+		{
+			if (minirt->light->position)
+				free(minirt->light->position);
+			free(minirt->light);
+		}
+			
 		free(minirt);
 	}
 }

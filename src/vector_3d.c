@@ -6,7 +6,7 @@
 /*   By: hrings <hrings@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/02 16:37:26 by hrings            #+#    #+#             */
-/*   Updated: 2024/02/02 19:37:17 by hrings           ###   ########.fr       */
+/*   Updated: 2024/02/03 23:06:10 by hrings           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,11 @@ void	norm_vector(t_vector *a)
 	a->x = a->x / length;
 	a->y = a->y / length;
 	a->z = a->z / length;
+}
+
+double v_len(t_vector *a)
+{
+	return (sqrt(pow(a->x, 2) + pow(a->y, 2) + pow(a->z, 2)));
 }
 
 t_vector	scalar_product(t_vector *a, double num)

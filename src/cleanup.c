@@ -6,7 +6,7 @@
 /*   By: hrings <hrings@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 12:08:15 by hrings            #+#    #+#             */
-/*   Updated: 2022/11/16 23:14:12 by hrings           ###   ########.fr       */
+/*   Updated: 2024/02/03 21:25:58 by hrings           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,17 +44,9 @@ static void	free_cylinder(t_cylinder *cylinder)
 
 static void	free_plane(t_plane *plane)
 {
-	free(plane->position);
-	free(plane->normal);
+	if (plane->position)
+		free(plane->position);
+	if (plane->normal)
+		free(plane->normal);
 }
 
-void	clean_up_ray(t_minirt *minirt)
-{
-	free(minirt->ray->u);
-	free(minirt->ray->v);
-	free(minirt->ray->l);
-	free(minirt->ray->s);
-	free(minirt->ray->n);
-	free(minirt->ray->direction);
-	free(minirt->ray);
-}
