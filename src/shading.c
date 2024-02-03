@@ -6,7 +6,7 @@
 /*   By: hrings <hrings@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/03 18:36:51 by hrings            #+#    #+#             */
-/*   Updated: 2024/02/04 00:19:36 by hrings           ###   ########.fr       */
+/*   Updated: 2024/02/04 00:45:42 by hrings           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,9 +40,9 @@ int	getdiffuselight(t_light *light , t_vector *normal, t_vector *dir, int color)
 	int b;
 
 	scale = dot_product(normal, dir) * light->brightness;
-	r = checkcolor(get_r(light->color)  * scale * get_r(color) / 255);
-	g = checkcolor(get_g(light->color)  * scale * get_g(color) / 255);
-	b = checkcolor(get_b(light->color)  * scale * get_b(color) / 255);
+	r = checkcolor(get_r(light->color) * get_r(color) * scale / 255);
+	g = checkcolor(get_g(light->color) * get_g(color) * scale / 255);
+	b = checkcolor(get_b(light->color) * get_b(color) * scale / 255);
 	return (get_rgba(r, g, b, 255));
 }
 
