@@ -6,15 +6,15 @@
 /*   By: hrings <hrings@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/02 20:15:38 by hrings            #+#    #+#             */
-/*   Updated: 2024/02/04 12:09:37 by hrings           ###   ########.fr       */
+/*   Updated: 2024/02/04 21:10:46 by hrings           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minirt.h>
 
-static t_object *parseplane(t_minirt *minirt, char *line);
-static t_object *parsespare(t_minirt *minirt, char *line);
-static t_object *parsecylinder(t_minirt *minirt, char *line);
+static t_object	*parseplane(t_minirt *minirt, char *line);
+static t_object	*parsespare(t_minirt *minirt, char *line);
+static t_object	*parsecylinder(t_minirt *minirt, char *line);
 
 void	addobj(t_minirt *minirt, char *line, enum e_obj_type type)
 {
@@ -31,13 +31,13 @@ void	addobj(t_minirt *minirt, char *line, enum e_obj_type type)
 		lst_obj_push(minirt, object);
 }
 
-static t_object *parseplane(t_minirt *minirt, char *line)
+static t_object	*parseplane(t_minirt *minirt, char *line)
 {
 	t_object	*object;
-	int color;
-	t_vector *direction;
-	t_vector *position;
-	char	**tmp;
+	int			color;
+	t_vector	*direction;
+	t_vector	*position;
+	char		**tmp;
 
 	object = (t_object *)malloc(sizeof(t_object));
 	if (!object)
@@ -57,13 +57,13 @@ static t_object *parseplane(t_minirt *minirt, char *line)
 	return (object);
 }
 
-static t_object *parsespare(t_minirt *minirt, char *line)
+static t_object	*parsespare(t_minirt *minirt, char *line)
 {
 	t_object	*object;
-	t_vector *position;
-	double	dia;
-	int	color;
-	char	**tmp;
+	t_vector	*position;
+	double		dia;
+	int			color;
+	char		**tmp;
 
 	object = (t_object *)malloc(sizeof(t_object));
 	if (!object)
@@ -80,16 +80,16 @@ static t_object *parsespare(t_minirt *minirt, char *line)
 		object->type = SPHERE;
 	}
 	ft_free(tmp);
-	return (object);	
+	return (object);
 }
 
-static t_object *parsecylinder(t_minirt *minirt, char *line)
+static t_object	*parsecylinder(t_minirt *minirt, char *line)
 {
 	t_object	*object;
-	t_vector *position;
-	t_vector *direction;
+	t_vector	*position;
+	t_vector	*direction;
 	t_info		info;
-	char	**tmp;
+	char		**tmp;
 
 	object = (t_object *)malloc(sizeof(t_object));
 	if (!object)

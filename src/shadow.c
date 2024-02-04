@@ -6,16 +6,16 @@
 /*   By: hrings <hrings@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/03 22:44:25 by hrings            #+#    #+#             */
-/*   Updated: 2024/02/03 23:22:20 by hrings           ###   ########.fr       */
+/*   Updated: 2024/02/04 21:11:29 by hrings           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minirt.h>
 
-bool isinshadow(t_minirt *minirt, t_ray *ray)
+bool	isinshadow(t_minirt *minirt, t_ray *ray)
 {
 	t_hit		hit;
-	double	distance;
+	double		distance;
 	t_lst_obj	*current;
 	t_vector	tmp;
 	t_object	*obj;
@@ -36,5 +36,5 @@ bool isinshadow(t_minirt *minirt, t_ray *ray)
 			return (true);
 		current = current->next;
 	}
-	return false;
+	return (false);
 }

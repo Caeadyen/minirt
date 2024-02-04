@@ -6,7 +6,7 @@
 /*   By: hrings <hrings@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/02 16:31:16 by hrings            #+#    #+#             */
-/*   Updated: 2024/02/02 19:28:16 by hrings           ###   ########.fr       */
+/*   Updated: 2024/02/04 21:03:04 by hrings           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,9 +83,9 @@ int	parsecolor(t_minirt *minirt, char *str, int error)
 	return (get_rgba(r, g, b, 255));
 }
 
-t_vector *parsevector(t_minirt *minirt, char *str, int error)
+t_vector	*parsevector(t_minirt *minirt, char *str, int error)
 {
-	char	**tmp;
+	char		**tmp;
 	t_vector	vec;
 
 	tmp = ft_split(str, ',');
@@ -100,6 +100,7 @@ t_vector *parsevector(t_minirt *minirt, char *str, int error)
 	ft_free(tmp);
 	return (init_vector(vec));
 }
+
 static int	addvalue(char *str, double num)
 {
 	double	result;

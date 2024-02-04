@@ -6,7 +6,7 @@
 /*   By: hrings <hrings@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/31 11:58:03 by hrings            #+#    #+#             */
-/*   Updated: 2024/02/02 21:37:30 by hrings           ###   ########.fr       */
+/*   Updated: 2024/02/04 21:18:04 by hrings           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 static void	checkfileext(t_minirt *minirt);
 static void	openfile(t_minirt *minirt);
 static void	readfile(t_minirt *minirt);
-
 
 void	readinput(t_minirt *minirt)
 {

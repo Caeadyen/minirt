@@ -6,7 +6,7 @@
 /*   By: hrings <hrings@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/31 12:12:49 by hrings            #+#    #+#             */
-/*   Updated: 2024/02/03 15:16:23 by hrings           ###   ########.fr       */
+/*   Updated: 2024/02/04 21:17:31 by hrings           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,6 @@ static void	freeupall(t_minirt *minirt)
 				free(minirt->light->position);
 			free(minirt->light);
 		}
-			
 		free(minirt);
 	}
 }

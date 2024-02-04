@@ -6,7 +6,7 @@
 /*   By: hrings <hrings@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/29 11:56:39 by hrings            #+#    #+#             */
-/*   Updated: 2024/02/04 18:44:51 by hrings           ###   ########.fr       */
+/*   Updated: 2024/02/04 21:24:15 by hrings           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,9 +23,10 @@
 # include "error.h"
 # define TITLE "Minirt Project"
 
-#define WIDTH 1440
-#define HEIGHT 900
-#define EPSILON 1e-6
+# define WIDTH 1440
+# define HEIGHT 900
+# define EPSILON 1e-6
+
 enum e_obj_type
 {
 	NONE,
@@ -47,9 +48,9 @@ enum e_hit_typ
 
 typedef struct s_info
 {
-	double dia;
-	double height;
-	int color;
+	double	dia;
+	double	height;
+	int		color;
 }	t_info;
 
 typedef struct s_vector
@@ -76,14 +77,14 @@ typedef struct s_camera
 typedef struct s_light
 {
 	t_vector	*position;
-	int	color;
+	int			color;
 	double		brightness;
 }	t_light;
 
 typedef struct s_amlight
 {
-	int	color;
-	double		ratio;
+	int		color;
+	double	ratio;
 }	t_amlight;
 
 typedef struct s_lst_obj
@@ -91,7 +92,6 @@ typedef struct s_lst_obj
 	void				*obj;
 	struct s_lst_obj	*next;
 }	t_lst_obj;
-
 
 typedef struct s_sphere
 {
@@ -143,8 +143,7 @@ typedef struct s_ray
 	t_vector	direction;
 	t_vector	pos;
 	double		d;
-	
-} t_ray;
+}	t_ray;
 
 typedef struct s_minirt
 {
@@ -169,69 +168,69 @@ typedef struct s_minirt
 }	t_minirt;
 
 //draw.c
-void	drawing(t_minirt *minirt);
+void		drawing(t_minirt *minirt);
 //raytracing.c
-int	raytracing(t_minirt *minirt, t_ray *ray);
-t_hit check_sphere_hit(t_ray *ray, t_object *obj);
+int			raytracing(t_minirt *minirt, t_ray *ray);
+t_hit		check_sphere_hit(t_ray *ray, t_object *obj);
 //cleanup.c
-void	cleanup(t_object *object);
+void		cleanup(t_object *object);
 //lst_obj.c
-void	lst_obj_push(t_minirt *minirt, t_object *obj);
-void	clear_obj_lst(t_minirt *minirt);
+void		lst_obj_push(t_minirt *minirt, t_object *obj);
+void		clear_obj_lst(t_minirt *minirt);
 //utilities.c
-void		key_press(void* param);
-double min_double(double a, double b);
-double max_double(double a, double b);
-void	ft_free(char **array);
+void		key_press(void *param);
+double		min_double(double a, double b);
+double		max_double(double a, double b);
+void		ft_free(char **array);
 //vector_3d.c
-t_vector *init_vector(t_vector a);
-t_vector cross_vector(t_vector *a, t_vector *b);
-void	norm_vector(t_vector *a);
-double v_len(t_vector *a);
-t_vector scalar_product(t_vector *a, double num);
-double dot_product(t_vector *a, t_vector *b);
-t_vector add_vector(t_vector *a, t_vector *b);
-t_vector sub_vector(t_vector *a, t_vector *b);
-void assign_vec(t_vector *a, t_vector b);
+t_vector	*init_vector(t_vector a);
+t_vector	cross_vector(t_vector *a, t_vector *b);
+void		norm_vector(t_vector *a);
+double		v_len(t_vector *a);
+t_vector	scalar_product(t_vector *a, double num);
+double		dot_product(t_vector *a, t_vector *b);
+t_vector	add_vector(t_vector *a, t_vector *b);
+t_vector	sub_vector(t_vector *a, t_vector *b);
+void		assign_vec(t_vector *a, t_vector b);
 t_vector	ray_point(t_vector *start, t_vector *dir, double t);
-bool	checknormalized(t_vector *v);
-t_vector pointonline(t_vector *pos, t_vector *dir, double para);
-double distance(t_vector *a, t_vector *b);
+bool		checknormalized(t_vector *v);
+t_vector	pointonline(t_vector *pos, t_vector *dir, double para);
+double		distance(t_vector *a, t_vector *b);
 //make_obj
-t_sphere *make_sphere(t_vector *position, double dia, int color);
-t_cylinder *make_cylinder(t_vector *position, t_vector *direction, t_info info);
-t_plane *make_plane(t_vector *position, t_vector *normal, int color);
+t_sphere	*make_sphere(t_vector *position, double dia, int color);
+t_cylinder	*make_cylinder(t_vector *position, t_vector *direction, t_info info);
+t_plane		*make_plane(t_vector *position, t_vector *normal, int color);
 //color.c
-int	get_a(int trgb);
-int	get_r(int trgb);
-int	get_g(int trgb);
-int	get_b(int trgb);
-int get_rgba(int r, int g, int b, int a);
+int			get_a(int trgb);
+int			get_r(int trgb);
+int			get_g(int trgb);
+int			get_b(int trgb);
+int			get_rgba(int r, int g, int b, int a);
 //cylinder.c
-t_hit check_cylinder_hit(t_ray *ray, t_object *obj);
-void cal_ino_cylinder(t_cylinder *cylinder);
+t_hit		check_cylinder_hit(t_ray *ray, t_object *obj);
+void		cal_ino_cylinder(t_cylinder *cylinder);
 //plane.c
-t_hit check_plane_hit(t_ray *ray, t_object *obj);
+t_hit		check_plane_hit(t_ray *ray, t_object *obj);
 //input.c
-void	readinput(t_minirt *minirt);
+void		readinput(t_minirt *minirt);
 //error.c
-void handelerror(t_minirt *minirt);
+void		handelerror(t_minirt *minirt);
 //addelement.c
-void	addamlight(t_minirt *minirt, char *line);
-void	addcamera(t_minirt *minirt, char *line);
-void	addlight(t_minirt *minirt, char *line);
+void		addamlight(t_minirt *minirt, char *line);
+void		addcamera(t_minirt *minirt, char *line);
+void		addlight(t_minirt *minirt, char *line);
 //parser.c
-double ft_strtof(t_minirt *minirt, char *str, int error);
-bool	checkdrange(double value, double min, double max);
-bool	checkirange(int value, int min, int max);
-int	parsecolor(t_minirt *minirt, char *str, int error);
-t_vector *parsevector(t_minirt *minirt, char *str, int error);
+double		ft_strtof(t_minirt *minirt, char *str, int error);
+bool		checkdrange(double value, double min, double max);
+bool		checkirange(int value, int min, int max);
+int			parsecolor(t_minirt *minirt, char *str, int error);
+t_vector	*parsevector(t_minirt *minirt, char *str, int error);
 //addobject.c
-void addobj(t_minirt *minirt, char *line, enum e_obj_type type);
+void		addobj(t_minirt *minirt, char *line, enum e_obj_type type);
 //shading.c
-int	addambientlight(t_minirt *minirt, int color);
-int	getdiffuselight(t_light *light , t_vector *normal, t_vector *dir, int color);
+int			addambientlight(t_minirt *minirt, int objectcolor, int color);
+int			getdiffuselight(t_light *light, t_vector *normal, t_vector *dir, int color);
 //shadow.c
-bool isinshadow(t_minirt *minirt, t_ray *ray);
+bool		isinshadow(t_minirt *minirt, t_ray *ray);
 
 #endif

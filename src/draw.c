@@ -6,7 +6,7 @@
 /*   By: hrings <hrings@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/29 15:58:12 by hrings            #+#    #+#             */
-/*   Updated: 2024/02/03 22:54:52 by hrings           ###   ########.fr       */
+/*   Updated: 2024/02/04 21:02:21 by hrings           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,13 @@ static void		get_s_and_dir(t_minirt *minirt, t_ray *ray, int row, int col);
 
 void	drawing(t_minirt *minirt)
 {
-	int	i;
-	int	j;
-	int	color;
-	t_ray ray;
+	int		i;
+	int		j;
+	int		color;
+	t_ray	ray;
 
 	i = 0;
 	j = 0;
-	
 	while (i < minirt->width)
 	{
 		while (j < minirt->height)
@@ -81,7 +80,7 @@ static double	get_d(t_minirt *minirt)
 	return (result);
 }
 
-static void		get_s_and_dir(t_minirt *minirt, t_ray *ray, int row, int col)
+static void	get_s_and_dir(t_minirt *minirt, t_ray *ray, int row, int col)
 {
 	t_vector	a;
 	t_vector	b;

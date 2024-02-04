@@ -6,18 +6,18 @@
 /*   By: hrings <hrings@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 22:59:57 by hrings            #+#    #+#             */
-/*   Updated: 2024/02/04 15:26:33 by hrings           ###   ########.fr       */
+/*   Updated: 2024/02/04 21:13:57 by hrings           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minirt.h>
 
-t_hit check_plane_hit(t_ray *ray, t_object *obj)
+t_hit	check_plane_hit(t_ray *ray, t_object *obj)
 {
-	t_hit	result;
-	t_plane	*plane;
-	double	divisor;
-	double t;
+	t_hit		result;
+	t_plane		*plane;
+	double		divisor;
+	double		t;
 	t_vector	tmp;
 
 	plane = (t_plane *)obj->specs;

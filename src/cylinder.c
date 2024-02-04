@@ -6,7 +6,7 @@
 /*   By: hrings <hrings@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 11:21:53 by hrings            #+#    #+#             */
-/*   Updated: 2024/02/04 18:49:55 by hrings           ###   ########.fr       */
+/*   Updated: 2024/02/04 21:08:48 by hrings           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,21 +15,21 @@
 static double	get_t(t_ray *ray, t_cylinder *cylinder);
 static double	check_base_hit(t_cylinder *cylinder, t_ray *ray);
 static double	check_base_top(t_cylinder *cylinder, t_ray *ray);
-static t_hit findcylinderhit(double t, double t3, double t4);
+static t_hit	findcylinderhit(double t, double t3, double t4);
 static t_abc	get_abc(t_ray *ray, t_cylinder *cylinder);
 
 t_hit	check_cylinder_hit(t_ray *ray, t_object *obj)
 {
 	t_cylinder	*cylinder;
-	double t;
-	double t3;
-	double t4;
+	double		t;
+	double		t3;
+	double		t4;
 
 	cylinder = (t_cylinder *)obj->specs;
 	t = get_t(ray, cylinder);
 	t3 = check_base_hit(cylinder, ray);
 	t4 = check_base_top(cylinder, ray);
-	return (findcylinderhit(t,t3,t4));
+	return (findcylinderhit(t, t3, t4));
 }
 
 void	cal_ino_cylinder(t_cylinder *cylinder)
@@ -58,11 +58,10 @@ void	cal_ino_cylinder(t_cylinder *cylinder)
 
 static double	get_t(t_ray *ray, t_cylinder *cylinder)
 {
-	t_abc	abc;
-	double	t1;
-	double	t2;
-	double	dis;
-	double	max;
+	t_abc		abc;
+	double		t1;
+	double		t2;
+	double		dis;
 	t_vector	point;
 
 	abc = get_abc(ray, cylinder);
@@ -72,13 +71,13 @@ static double	get_t(t_ray *ray, t_cylinder *cylinder)
 	dis = sqrt(dis);
 	t1 = (-abc.b + dis) / (2 * abc.a);
 	t2 = (-abc.b - dis) / (2 * abc.a);
-	max = sqrt(pow(cylinder->height / 2, 2) + pow(cylinder->diameter, 2));
+	dis = sqrt(pow(cylinder->height / 2, 2) + pow(cylinder->diameter, 2));
 	point = pointonline(&ray->pos, &ray->direction, t1);
-	if (distance(&point, cylinder->position) > max)
+	if (distance(&point, cylinder->position) > dis)
 		t1 = -1;
 	point = pointonline(&ray->pos, &ray->direction, t2);
-	if (distance(&point, cylinder->position)  > max)
-		t2 = -1;	
+	if (distance(&point, cylinder->position) > dis)
+		t2 = -1;
 	if (t1 < 0 && t2 < 0)
 		return (-1);
 	else if (t1 < 0 || t2 < 0)
@@ -89,9 +88,9 @@ static double	get_t(t_ray *ray, t_cylinder *cylinder)
 
 static double	check_base_hit(t_cylinder *cylinder, t_ray *ray)
 {
-	double	divisor;
-	double	t;
-	double	d;
+	double		divisor;
+	double		t;
+	double		d;
 	t_vector	tmp;
 
 	divisor = dot_product(cylinder->direction, &ray->direction);
@@ -112,9 +111,9 @@ static double	check_base_hit(t_cylinder *cylinder, t_ray *ray)
 
 static double	check_base_top(t_cylinder *cylinder, t_ray *ray)
 {
-	double	divisor;
-	double	t;
-	double	d;
+	double		divisor;
+	double		t;
+	double		d;
 	t_vector	tmp;
 
 	divisor = dot_product(cylinder->direction, &ray->direction);
@@ -149,32 +148,26 @@ static t_abc	get_abc(t_ray *ray, t_cylinder *cylinder)
 	return (result);
 }
 
-static t_hit findcylinderhit(double t, double t3, double t4)
+static t_hit	findcylinderhit(double t, double t3, double t4)
 {
 	t_hit	result;
 
+	result.type = NO;
+	result.distance = INFINITY;
 	if (t > 0 && (t < t3 || t3 < 0) && (t < t4 || t4 < 0))
 	{
 		result.type = MANTLE;
 		result.distance = t;
-		return (result);
 	}
 	else if (t3 > 0 && (t3 < t4 || t4 < 0))
 	{
 		result.type = BASE;
 		result.distance = t3;
-		return (result);
 	}
 	else if (t4 > 0)
 	{
 		result.type = TOP;
 		result.distance = t4;
-		return (result);
 	}
-	else
-	{
-		result.type = NO;
-		result.distance = INFINITY;
-		return (result);
-	}
+	return (result);
 }

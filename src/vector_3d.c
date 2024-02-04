@@ -6,7 +6,7 @@
 /*   By: hrings <hrings@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/02 16:37:26 by hrings            #+#    #+#             */
-/*   Updated: 2024/02/04 18:43:12 by hrings           ###   ########.fr       */
+/*   Updated: 2024/02/04 21:15:13 by hrings           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ void	norm_vector(t_vector *a)
 	a->z = a->z / length;
 }
 
-double v_len(t_vector *a)
+double	v_len(t_vector *a)
 {
 	return (sqrt(pow(a->x, 2) + pow(a->y, 2) + pow(a->z, 2)));
 }
@@ -103,7 +103,7 @@ t_vector	ray_point(t_vector *start, t_vector *dir, double t)
 
 bool	checknormalized(t_vector *v)
 {
-	double length;
+	double	length;
 
 	length = sqrt(v->x * v->x + v->y * v->y + v->z * v->z);
 	if (length == 1)
@@ -111,18 +111,18 @@ bool	checknormalized(t_vector *v)
 	return (true);
 }
 
-t_vector pointonline(t_vector *pos, t_vector *dir, double para)
+t_vector	pointonline(t_vector *pos, t_vector *dir, double para)
 {
-	t_vector result;
+	t_vector	result;
 
 	result = scalar_product(dir, para);
 	result = add_vector(pos, &result);
 	return (result);
 }
 
-double distance(t_vector *a, t_vector *b)
+double	distance(t_vector *a, t_vector *b)
 {
-	t_vector tmp;
+	t_vector	tmp;
 
 	tmp = sub_vector(a, b);
 	return (v_len(&tmp));

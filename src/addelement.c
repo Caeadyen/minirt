@@ -6,7 +6,7 @@
 /*   By: hrings <hrings@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/02 16:26:30 by hrings            #+#    #+#             */
-/*   Updated: 2024/02/03 15:29:45 by hrings           ###   ########.fr       */
+/*   Updated: 2024/02/04 21:04:31 by hrings           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 void	addamlight(t_minirt *minirt, char *line)
 {
-	char	**tmp;
-	t_amlight *amlight;
+	char		**tmp;
+	t_amlight	*amlight;
 
 	if (!minirt->amlight)
 	{
@@ -30,7 +30,7 @@ void	addamlight(t_minirt *minirt, char *line)
 			amlight->ratio = ft_strtof(minirt, tmp[0], AMLIGHTRATIO);
 			if (checkdrange(amlight->ratio, 0, 1))
 				minirt->error = AMLIGHTRANGE;
-			amlight->color = parsecolor(minirt, tmp[1], AMLIGHTCOLOR);		
+			amlight->color = parsecolor(minirt, tmp[1], AMLIGHTCOLOR);
 		}
 		minirt->amlight = amlight;
 		ft_free(tmp);
@@ -41,7 +41,7 @@ void	addamlight(t_minirt *minirt, char *line)
 
 void	addcamera(t_minirt *minirt, char *line)
 {
-	char	**tmp;
+	char		**tmp;
 	t_camera	*cam;
 
 	if (!minirt->camera)
@@ -74,7 +74,7 @@ void	addcamera(t_minirt *minirt, char *line)
 void	addlight(t_minirt *minirt, char *line)
 {
 	char	**tmp;
-	t_light *light;
+	t_light	*light;
 
 	if (!minirt->light)
 	{
@@ -88,7 +88,7 @@ void	addlight(t_minirt *minirt, char *line)
 				exit(1);
 			light->position = parsevector(minirt, tmp[0], LIGHTPOSITION);
 			light->brightness = ft_strtof(minirt, tmp[1], LIGHTBRIGHT);
-			if (checkdrange(light->brightness, 0 , 1))
+			if (checkdrange(light->brightness, 0, 1))
 				minirt->error = LIGHTBRIGHTRANGE;
 			light->color = parsecolor(minirt, tmp[2], LIGHTCOLOR);
 			minirt->light = light;
