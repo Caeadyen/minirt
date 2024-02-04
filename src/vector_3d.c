@@ -6,7 +6,7 @@
 /*   By: hrings <hrings@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/02 16:37:26 by hrings            #+#    #+#             */
-/*   Updated: 2024/02/03 23:06:10 by hrings           ###   ########.fr       */
+/*   Updated: 2024/02/04 18:43:12 by hrings           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,4 +109,21 @@ bool	checknormalized(t_vector *v)
 	if (length == 1)
 		return (false);
 	return (true);
+}
+
+t_vector pointonline(t_vector *pos, t_vector *dir, double para)
+{
+	t_vector result;
+
+	result = scalar_product(dir, para);
+	result = add_vector(pos, &result);
+	return (result);
+}
+
+double distance(t_vector *a, t_vector *b)
+{
+	t_vector tmp;
+
+	tmp = sub_vector(a, b);
+	return (v_len(&tmp));
 }

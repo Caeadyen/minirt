@@ -6,7 +6,7 @@
 /*   By: hrings <hrings@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 11:21:53 by hrings            #+#    #+#             */
-/*   Updated: 2024/02/04 16:11:44 by hrings           ###   ########.fr       */
+/*   Updated: 2024/02/04 18:49:55 by hrings           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,15 +73,11 @@ static double	get_t(t_ray *ray, t_cylinder *cylinder)
 	t1 = (-abc.b + dis) / (2 * abc.a);
 	t2 = (-abc.b - dis) / (2 * abc.a);
 	max = sqrt(pow(cylinder->height / 2, 2) + pow(cylinder->diameter, 2));
-	point = scalar_product(&ray->direction, t1);
-	point = add_vector(&ray->pos, &point);
-	point = sub_vector(&point, cylinder->position);
-	if (v_len(&point) > max)
+	point = pointonline(&ray->pos, &ray->direction, t1);
+	if (distance(&point, cylinder->position) > max)
 		t1 = -1;
-	point = scalar_product(&ray->direction, t2);
-	point = add_vector(&ray->pos, &point);
-	point = sub_vector(&point, cylinder->position);
-	if (v_len(&point) > max)
+	point = pointonline(&ray->pos, &ray->direction, t2);
+	if (distance(&point, cylinder->position)  > max)
 		t2 = -1;	
 	if (t1 < 0 && t2 < 0)
 		return (-1);
@@ -105,8 +101,7 @@ static double	check_base_hit(t_cylinder *cylinder, t_ray *ray)
 	t = dot_product(cylinder->direction, &tmp) / divisor;
 	if (t <= EPSILON)
 		return (-1);
-	tmp = scalar_product(&ray->direction, t);
-	tmp = add_vector(&ray->pos, &tmp);
+	tmp = pointonline(&ray->pos, &ray->direction, t);
 	tmp = sub_vector(&tmp, cylinder->base);
 	d = dot_product(&tmp, &tmp);
 	if (d <= cylinder->diameter * cylinder->diameter)
@@ -129,8 +124,7 @@ static double	check_base_top(t_cylinder *cylinder, t_ray *ray)
 	t = dot_product(cylinder->direction, &tmp) / divisor;
 	if (t <= EPSILON)
 		return (-1);
-	tmp = scalar_product(&ray->direction, t);
-	tmp = add_vector(&ray->pos, &tmp);
+	tmp = pointonline(&ray->pos, &ray->direction, t);
 	tmp = sub_vector(&tmp, cylinder->top);
 	d = dot_product(&tmp, &tmp);
 	if (d <= cylinder->diameter * cylinder->diameter)

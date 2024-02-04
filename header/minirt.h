@@ -6,7 +6,7 @@
 /*   By: hrings <hrings@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/29 11:56:39 by hrings            #+#    #+#             */
-/*   Updated: 2024/02/04 12:00:55 by hrings           ###   ########.fr       */
+/*   Updated: 2024/02/04 18:44:51 by hrings           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -195,7 +195,8 @@ t_vector sub_vector(t_vector *a, t_vector *b);
 void assign_vec(t_vector *a, t_vector b);
 t_vector	ray_point(t_vector *start, t_vector *dir, double t);
 bool	checknormalized(t_vector *v);
-
+t_vector pointonline(t_vector *pos, t_vector *dir, double para);
+double distance(t_vector *a, t_vector *b);
 //make_obj
 t_sphere *make_sphere(t_vector *position, double dia, int color);
 t_cylinder *make_cylinder(t_vector *position, t_vector *direction, t_info info);

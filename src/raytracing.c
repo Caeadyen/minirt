@@ -6,7 +6,7 @@
 /*   By: hrings <hrings@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 11:43:55 by hrings            #+#    #+#             */
-/*   Updated: 2024/02/04 12:09:47 by hrings           ###   ########.fr       */
+/*   Updated: 2024/02/04 19:39:24 by hrings           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,9 @@
 
 static int		get_color(t_minirt *minirt, t_ray *ray, t_hit *hit);
 static t_hit	get_t(double b, double dis);
-static int	getspherecolor(t_minirt *minirt, t_ray *ray, t_hit *hit);
-static int	getplanecolor(t_minirt *minirt, t_ray *ray, t_hit *hit);
+static int		getspherecolor(t_minirt *minirt, t_ray *ray, t_hit *hit);
+static int		getplanecolor(t_minirt *minirt, t_ray *ray, t_hit *hit);
+static int		getcylindercolor(t_minirt *minirt, t_ray *ray, t_hit *hit);
 
 int	raytracing(t_minirt *minirt, t_ray *ray)
 {
@@ -48,7 +49,7 @@ int	raytracing(t_minirt *minirt, t_ray *ray)
 	}
 	if (min_hit.type)
 		return (get_color(minirt, ray, &min_hit));
-	return (get_rgba(0,0,0,255));
+	return (get_rgba(0, 0, 0, 255));
 }
 
 t_hit	check_sphere_hit(t_ray *ray, t_object *obj)
@@ -69,42 +70,18 @@ t_hit	check_sphere_hit(t_ray *ray, t_object *obj)
 
 static int	get_color(t_minirt *minirt, t_ray *ray, t_hit *hit)
 {
-
-	t_cylinder	*cylinder;
-	
-	t_vector	tmp;
-	t_vector	point;
-	int result;
+	int	result;
 
 	result = 0;
 	if (hit->hit->type == SPHERE)
-	{
 		result = getspherecolor(minirt, ray, hit);
-	}
 	else if (hit->hit->type == CYLINDER)
-	{
-		cylinder = (t_cylinder *)hit->hit->specs;
-		point = scalar_product(&ray->direction, hit->distance);
-		point = add_vector(minirt->camera->position, &point);
-		tmp = sub_vector(&point, cylinder->base);
-		tmp = scalar_product(cylinder->axis, dot_product(&tmp, cylinder->axis));
-		tmp = add_vector(cylinder->base, &tmp);
-		tmp = sub_vector(&point, &tmp);
-		norm_vector(&tmp);
-		result = get_rgba(get_r(cylinder->color) * ((tmp.y + 1) * 0.5) ,\
-			get_g(cylinder->color) * ((tmp.y + 1) * 0.5), \
-			get_b(cylinder->color) * ((tmp.y + 1) * 0.5), 255);	
-	}
+		result = getcylindercolor(minirt, ray, hit);
 	else if (hit->hit->type == PLANE)
-	{
-		
 		result = getplanecolor(minirt, ray, hit);
-	}
 	result = addambientlight(minirt, result);
 	return (result);
 }
-
-
 
 static t_hit	get_t(double b, double dis)
 {
@@ -149,34 +126,58 @@ static int	getspherecolor(t_minirt *minirt, t_ray *ray, t_hit *hit)
 	lightray.pos = add_vector(&lightray.pos, &tmp);
 	lightray.direction = sub_vector(minirt->light->position, &lightray.pos);
 	norm_vector(&lightray.direction);
-	if(isinshadow(minirt, &lightray))
-		return (get_rgba(0,0,0,255));
-	return getdiffuselight(minirt->light, &normal, &lightray.direction, sphere->color);
+	if (isinshadow(minirt, &lightray))
+		return (get_rgba(0, 0, 0, 255));
+	return (getdiffuselight(minirt->light, &normal, &lightray.direction, sphere->color));
 }
 
 static int	getplanecolor(t_minirt *minirt, t_ray *ray, t_hit *hit)
 {
-	t_plane	*plane;
+	t_plane		*plane;
 	t_vector	tmp;
 	t_ray		lightray;
 	t_vector	normal;
 
 	plane = (t_plane *)hit->hit->specs;
 	if (dot_product(&ray->direction, plane->normal) < 0)
-	{
 		normal = scalar_product(plane->normal, 1);
-	}
 	else
-	{
 		normal = scalar_product(plane->normal, -1);
-	}
 	tmp = scalar_product(&ray->direction, hit->distance);
 	lightray.pos = add_vector(&ray->pos, &tmp);
 	tmp = scalar_product(&normal, EPSILON);
 	lightray.pos = add_vector(&lightray.pos, &tmp);
 	lightray.direction = sub_vector(minirt->light->position, &lightray.pos);
 	norm_vector(&lightray.direction);
-	if(isinshadow(minirt, &lightray))
-		return (get_rgba(0,0,0,255));
-	return getdiffuselight(minirt->light, &normal, &lightray.direction, plane->color);
+	if (isinshadow(minirt, &lightray))
+		return (get_rgba(0, 0, 0, 255));
+	return (getdiffuselight(minirt->light, &normal, &lightray.direction, plane->color));
+}
+
+static int	getcylindercolor(t_minirt *minirt, t_ray *ray, t_hit *hit)
+{
+	t_cylinder	*cylinder;	
+	t_vector	normal;
+	t_ray		lightray;
+
+	cylinder = (t_cylinder *)hit->hit->specs;
+	lightray.pos = pointonline(&ray->pos, &ray->direction, hit->distance);
+	lightray.direction = sub_vector(minirt->light->position, &lightray.pos);
+	norm_vector(&lightray.direction);
+	if (hit->type == MANTLE)
+	{
+		normal = sub_vector(&lightray.pos, cylinder->base);
+		normal = scalar_product(cylinder->axis, dot_product(&normal, cylinder->axis));
+		normal = add_vector(cylinder->base, &normal);
+		normal = sub_vector(&lightray.pos, &normal);
+		norm_vector(&normal);
+	}
+	else if (hit->type == TOP)
+		normal = scalar_product(cylinder->direction, 1);
+	else if (hit->type == BASE)
+		normal = scalar_product(cylinder->direction, -1);
+	lightray.pos = pointonline(&lightray.pos, &normal, EPSILON);
+	if (isinshadow(minirt, &lightray))
+		return (get_rgba(0, 0, 0, 255));
+	return (getdiffuselight(minirt->light, &normal, &lightray.direction, cylinder->color));
 }
