@@ -22,3 +22,5 @@ objects to add:
 Plane\
 Sphere\
 Cylinder
+
+work in progress, so will add new features from time to time
