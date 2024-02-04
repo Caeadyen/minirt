@@ -6,41 +6,30 @@
 /*   By: hrings <hrings@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/16 11:21:53 by hrings            #+#    #+#             */
-/*   Updated: 2024/02/03 23:00:23 by hrings           ###   ########.fr       */
+/*   Updated: 2024/02/04 16:11:44 by hrings           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minirt.h>
 
-static t_hit	get_t(double a, double b, double c);
-static t_hit	check_base_hit(t_cylinder *cylinder);
-static t_hit	check_base_top(t_cylinder *cylinder);
+static double	get_t(t_ray *ray, t_cylinder *cylinder);
+static double	check_base_hit(t_cylinder *cylinder, t_ray *ray);
+static double	check_base_top(t_cylinder *cylinder, t_ray *ray);
+static t_hit findcylinderhit(double t, double t3, double t4);
 static t_abc	get_abc(t_ray *ray, t_cylinder *cylinder);
 
 t_hit	check_cylinder_hit(t_ray *ray, t_object *obj)
 {
 	t_cylinder	*cylinder;
-	t_vector	point;
-	t_hit		result;
-	t_abc		abc;
-	double		tmp;
+	double t;
+	double t3;
+	double t4;
 
 	cylinder = (t_cylinder *)obj->specs;
-	abc = get_abc(ray, cylinder);
-	result = get_t(abc.a, abc.b, abc.c);
-	if (result.type == NO)
-		return (result);
-	point = ray_point(&ray->pos, &ray->direction, \
-					result.distance);
-	point = sub_vector(&point, cylinder->base);
-	tmp = dot_product(&point, cylinder->axis);
-	if (tmp < 0)
-		return (check_base_hit(cylinder));
-	else if (tmp > cylinder->height)
-		return (check_base_top(cylinder));
-	else
-		result.where = MANTLE;
-	return (result);
+	t = get_t(ray, cylinder);
+	t3 = check_base_hit(cylinder, ray);
+	t4 = check_base_top(cylinder, ray);
+	return (findcylinderhit(t,t3,t4));
 }
 
 void	cal_ino_cylinder(t_cylinder *cylinder)
@@ -67,53 +56,87 @@ void	cal_ino_cylinder(t_cylinder *cylinder)
 	assign_vec(cylinder->axis, tmp);
 }
 
-static t_hit	get_t(double a, double b, double c)
+static double	get_t(t_ray *ray, t_cylinder *cylinder)
 {
-	t_hit	result;
-	double	result1;
-	double	result2;
+	t_abc	abc;
+	double	t1;
+	double	t2;
 	double	dis;
+	double	max;
+	t_vector	point;
 
-	dis = b * b - 4 * a * c;
-	result.type = NO;
+	abc = get_abc(ray, cylinder);
+	dis = abc.b * abc.b - 4 * abc.a * abc.c;
 	if (dis < 0)
-		return (result);
+		return (-1);
 	dis = sqrt(dis);
-	result1 = (-b + dis) / (2 * a);
-	result2 = (-b - dis) / (2 * a);
-	if (result1 < 0 && result2 < 0)
-		result.type = NO;
-	else if (result1 < 0 || result2 < 0)
-	{
-		result.type = INSIDE;
-		result.distance = max_double(result1, result2);
-	}
+	t1 = (-abc.b + dis) / (2 * abc.a);
+	t2 = (-abc.b - dis) / (2 * abc.a);
+	max = sqrt(pow(cylinder->height / 2, 2) + pow(cylinder->diameter, 2));
+	point = scalar_product(&ray->direction, t1);
+	point = add_vector(&ray->pos, &point);
+	point = sub_vector(&point, cylinder->position);
+	if (v_len(&point) > max)
+		t1 = -1;
+	point = scalar_product(&ray->direction, t2);
+	point = add_vector(&ray->pos, &point);
+	point = sub_vector(&point, cylinder->position);
+	if (v_len(&point) > max)
+		t2 = -1;	
+	if (t1 < 0 && t2 < 0)
+		return (-1);
+	else if (t1 < 0 || t2 < 0)
+		return (max_double(t1, t2));
 	else
-	{
-		result.type = OUTSIDE;
-		result.distance = min_double(result1, result2);
-	}
-	return (result);
+		return (min_double(t1, t2));
 }
 
-t_hit	check_base_hit(t_cylinder *cylinder)
+static double	check_base_hit(t_cylinder *cylinder, t_ray *ray)
 {
-	t_hit	result;
+	double	divisor;
+	double	t;
+	double	d;
+	t_vector	tmp;
 
-	result.type = NO;
-	result.where = BASE;
-	result.distance = cylinder->height;
-	return (result);
+	divisor = dot_product(cylinder->direction, &ray->direction);
+	if (divisor <= 1e-6 && divisor >= -1e-6)
+		return (-1);
+	tmp = sub_vector(cylinder->base, &ray->pos);
+	t = dot_product(cylinder->direction, &tmp) / divisor;
+	if (t <= EPSILON)
+		return (-1);
+	tmp = scalar_product(&ray->direction, t);
+	tmp = add_vector(&ray->pos, &tmp);
+	tmp = sub_vector(&tmp, cylinder->base);
+	d = dot_product(&tmp, &tmp);
+	if (d <= cylinder->diameter * cylinder->diameter)
+		return (t);
+	else
+		return (-1);
 }
 
-t_hit	check_base_top(t_cylinder *cylinder)
+static double	check_base_top(t_cylinder *cylinder, t_ray *ray)
 {
-	t_hit	result;
+	double	divisor;
+	double	t;
+	double	d;
+	t_vector	tmp;
 
-	result.type = NO;
-	result.where = TOP;
-	result.distance = cylinder->height;
-	return (result);
+	divisor = dot_product(cylinder->direction, &ray->direction);
+	if (divisor <= 1e-6 && divisor >= -1e-6)
+		return (-1);
+	tmp = sub_vector(cylinder->top, &ray->pos);
+	t = dot_product(cylinder->direction, &tmp) / divisor;
+	if (t <= EPSILON)
+		return (-1);
+	tmp = scalar_product(&ray->direction, t);
+	tmp = add_vector(&ray->pos, &tmp);
+	tmp = sub_vector(&tmp, cylinder->top);
+	d = dot_product(&tmp, &tmp);
+	if (d <= cylinder->diameter * cylinder->diameter)
+		return (t);
+	else
+		return (-1);
 }
 
 static t_abc	get_abc(t_ray *ray, t_cylinder *cylinder)
@@ -130,4 +153,34 @@ static t_abc	get_abc(t_ray *ray, t_cylinder *cylinder)
 				pow(dot_product(&w, cylinder->axis), 2) - \
 				pow(cylinder->diameter, 2);
 	return (result);
+}
+
+static t_hit findcylinderhit(double t, double t3, double t4)
+{
+	t_hit	result;
+
+	if (t > 0 && (t < t3 || t3 < 0) && (t < t4 || t4 < 0))
+	{
+		result.type = MANTLE;
+		result.distance = t;
+		return (result);
+	}
+	else if (t3 > 0 && (t3 < t4 || t4 < 0))
+	{
+		result.type = BASE;
+		result.distance = t3;
+		return (result);
+	}
+	else if (t4 > 0)
+	{
+		result.type = TOP;
+		result.distance = t4;
+		return (result);
+	}
+	else
+	{
+		result.type = NO;
+		result.distance = INFINITY;
+		return (result);
+	}
 }

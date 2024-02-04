@@ -6,7 +6,7 @@
 /*   By: hrings <hrings@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 11:43:55 by hrings            #+#    #+#             */
-/*   Updated: 2024/02/03 23:58:14 by hrings           ###   ########.fr       */
+/*   Updated: 2024/02/04 12:09:47 by hrings           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 static int		get_color(t_minirt *minirt, t_ray *ray, t_hit *hit);
 static t_hit	get_t(double b, double dis);
 static int	getspherecolor(t_minirt *minirt, t_ray *ray, t_hit *hit);
+static int	getplanecolor(t_minirt *minirt, t_ray *ray, t_hit *hit);
 
 int	raytracing(t_minirt *minirt, t_ray *ray)
 {
@@ -70,7 +71,7 @@ static int	get_color(t_minirt *minirt, t_ray *ray, t_hit *hit)
 {
 
 	t_cylinder	*cylinder;
-	t_plane	*plane;
+	
 	t_vector	tmp;
 	t_vector	point;
 	int result;
@@ -96,8 +97,8 @@ static int	get_color(t_minirt *minirt, t_ray *ray, t_hit *hit)
 	}
 	else if (hit->hit->type == PLANE)
 	{
-		plane = (t_plane *)hit->hit->specs;
-		result = plane->color;
+		
+		result = getplanecolor(minirt, ray, hit);
 	}
 	result = addambientlight(minirt, result);
 	return (result);
@@ -151,4 +152,31 @@ static int	getspherecolor(t_minirt *minirt, t_ray *ray, t_hit *hit)
 	if(isinshadow(minirt, &lightray))
 		return (get_rgba(0,0,0,255));
 	return getdiffuselight(minirt->light, &normal, &lightray.direction, sphere->color);
+}
+
+static int	getplanecolor(t_minirt *minirt, t_ray *ray, t_hit *hit)
+{
+	t_plane	*plane;
+	t_vector	tmp;
+	t_ray		lightray;
+	t_vector	normal;
+
+	plane = (t_plane *)hit->hit->specs;
+	if (dot_product(&ray->direction, plane->normal) < 0)
+	{
+		normal = scalar_product(plane->normal, 1);
+	}
+	else
+	{
+		normal = scalar_product(plane->normal, -1);
+	}
+	tmp = scalar_product(&ray->direction, hit->distance);
+	lightray.pos = add_vector(&ray->pos, &tmp);
+	tmp = scalar_product(&normal, EPSILON);
+	lightray.pos = add_vector(&lightray.pos, &tmp);
+	lightray.direction = sub_vector(minirt->light->position, &lightray.pos);
+	norm_vector(&lightray.direction);
+	if(isinshadow(minirt, &lightray))
+		return (get_rgba(0,0,0,255));
+	return getdiffuselight(minirt->light, &normal, &lightray.direction, plane->color);
 }

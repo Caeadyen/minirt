@@ -6,7 +6,7 @@
 /*   By: hrings <hrings@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/02 20:15:38 by hrings            #+#    #+#             */
-/*   Updated: 2024/02/03 15:29:03 by hrings           ###   ########.fr       */
+/*   Updated: 2024/02/04 12:09:37 by hrings           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ static t_object *parsespare(t_minirt *minirt, char *line)
 	else
 	{
 		position = parsevector(minirt, tmp[0], SPAREPOSITION);
-		dia = ft_strtof(minirt, tmp[1], SPARECOLOR);
+		dia = ft_strtof(minirt, tmp[1], SPARECOLOR) / 2;
 		color = parsecolor(minirt, tmp[2], SPARECOLOR);
 		object->specs = make_sphere(position, dia, color);
 		object->type = SPHERE;
@@ -106,11 +106,11 @@ static t_object *parsecylinder(t_minirt *minirt, char *line)
 		// if (checknormalized(direction))
 		// 	minirt->error = CYLINDERNORM;
 		norm_vector(direction);
-		info.dia = ft_strtof(minirt, tmp[2], CYLINDERDIA);
+		info.dia = ft_strtof(minirt, tmp[2], CYLINDERDIA) / 2;
 		info.height = ft_strtof(minirt, tmp[3], CYLINDERHEIGHT);
 		info.color = parsecolor(minirt, tmp[4], CYLINDERCOLOR);
 		object->specs = make_cylinder(position, direction, info);
-		object->type = SPHERE;
+		object->type = CYLINDER;
 	}
 	ft_free(tmp);
 	return (object);

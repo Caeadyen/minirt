@@ -6,7 +6,7 @@
 /*   By: hrings <hrings@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/29 11:56:39 by hrings            #+#    #+#             */
-/*   Updated: 2024/02/03 23:58:54 by hrings           ###   ########.fr       */
+/*   Updated: 2024/02/04 12:00:55 by hrings           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,8 @@
 # include "error.h"
 # define TITLE "Minirt Project"
 
-#define WIDTH 1200
-#define HEIGHT 800
+#define WIDTH 1440
+#define HEIGHT 900
 #define EPSILON 1e-6
 enum e_obj_type
 {
