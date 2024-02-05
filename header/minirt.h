@@ -6,7 +6,7 @@
 /*   By: hrings <hrings@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/29 11:56:39 by hrings            #+#    #+#             */
-/*   Updated: 2024/02/05 16:39:28 by hrings           ###   ########.fr       */
+/*   Updated: 2024/02/05 17:59:42 by hrings           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,8 @@
 # define WIDTH 1440
 # define HEIGHT 900
 # define EPSILON 1e-6
-
+# define SAMPLESIZE 3
+# define SEED 42
 enum e_obj_type
 {
 	NONE,
@@ -191,6 +192,7 @@ void		key_press(void *param);
 double		min_double(double a, double b);
 double		max_double(double a, double b);
 void		ft_free(char **array);
+double		random_double(void);
 //vector_3d.c
 t_vector	*init_vector(t_vector a);
 t_vector	cross_vector(t_vector *a, t_vector *b);
@@ -215,6 +217,7 @@ int			get_r(int trgb);
 int			get_g(int trgb);
 int			get_b(int trgb);
 int			get_rgba(int r, int g, int b, int a);
+void		averagecolor(t_color *color, int num);
 t_color 	initcolor(void);
 void	 	addcolor(t_color *a, t_color b);
 int			decodecolor(t_color *color);

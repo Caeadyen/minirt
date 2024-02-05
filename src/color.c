@@ -6,7 +6,7 @@
 /*   By: hrings <hrings@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 15:54:29 by hrings            #+#    #+#             */
-/*   Updated: 2024/02/05 16:39:17 by hrings           ###   ########.fr       */
+/*   Updated: 2024/02/05 17:49:42 by hrings           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,13 @@ int	get_rgba(int r, int g, int b, int a)
 	return (r << 24 | g << 16 | b << 8 | a);
 }
 
+void averagecolor(t_color *color, int num)
+{
+	color->r /= num;
+	color->g /= num;
+	color->b /= num;
+}
+
 t_color	initcolor(void)
 {
 	t_color	result;
@@ -57,7 +64,6 @@ void	addcolor(t_color *a, t_color b)
 	a->r += b.r;
 	a->b += b.b;
 	a->g += b.g;
-	a->a += b.a;
 }
 
 int	decodecolor(t_color *color)

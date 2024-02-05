@@ -6,7 +6,7 @@
 /*   By: hrings <hrings@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 15:08:17 by hrings            #+#    #+#             */
-/*   Updated: 2024/02/02 17:07:12 by hrings           ###   ########.fr       */
+/*   Updated: 2024/02/05 17:00:19 by hrings           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,4 +48,9 @@ void	ft_free(char **array)
 		index++;
 	}
 	free(array);
+}
+
+double	random_double(void)
+{
+    return rand() / (RAND_MAX + 1.0);
 }

@@ -6,7 +6,7 @@
 /*   By: hrings <hrings@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/29 12:00:09 by hrings            #+#    #+#             */
-/*   Updated: 2024/02/05 16:40:33 by hrings           ###   ########.fr       */
+/*   Updated: 2024/02/05 17:59:32 by hrings           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ int	main(int argc, char **argv)
 
 	if (argc == 2)
 	{
+		srand(SEED);
 		minirt = (t_minirt *)ft_calloc(1, sizeof(t_minirt));
 		if (!minirt)
 			return (1);

@@ -6,7 +6,7 @@
 /*   By: hrings <hrings@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/29 15:58:12 by hrings            #+#    #+#             */
-/*   Updated: 2024/02/05 16:40:55 by hrings           ###   ########.fr       */
+/*   Updated: 2024/02/05 17:51:36 by hrings           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ void	drawing(t_minirt *minirt)
 {
 	int		i;
 	int		j;
+	int		sample;
 	t_color	color;
 	t_ray	ray;
 	t_luv	luv;
@@ -32,8 +33,14 @@ void	drawing(t_minirt *minirt)
 		while (j < minirt->height)
 		{
 			color = initcolor();
-			ray.direction = init_ray_dir(minirt, &luv, j, i);
-			addcolor(&color, raytracing(minirt, &ray));
+			sample = 0;
+			while (sample < SAMPLESIZE)
+			{
+				ray.direction = init_ray_dir(minirt, &luv, j, i);
+				addcolor(&color, raytracing(minirt, &ray));
+				++sample;
+			}
+			averagecolor(&color, SAMPLESIZE);
 			mlx_put_pixel(minirt->img, i, j, decodecolor(&color));
 			j++;
 		}
@@ -51,8 +58,8 @@ static t_vector	init_ray_dir(t_minirt *minirt, t_luv *luv, int row, int col)
 	t_vector	c;
 	t_vector	s;
 
-	a = scalar_product(&luv->u, col);
-	b = scalar_product(&luv->v, row);
+	a = scalar_product(&luv->u, (double) col + -0.5 + random_double());
+	b = scalar_product(&luv->v, (double) row + -0.5 + random_double());
 	c = sub_vector(&a, &b);
 	s = add_vector(&luv->l, &c);
 	direction = sub_vector(&s, minirt->camera->position);
