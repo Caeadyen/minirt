@@ -6,7 +6,7 @@
 /*   By: hrings <hrings@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/29 11:56:39 by hrings            #+#    #+#             */
-/*   Updated: 2024/02/04 21:24:15 by hrings           ###   ########.fr       */
+/*   Updated: 2024/02/05 15:36:39 by hrings           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,15 +135,16 @@ typedef struct s_hit
 
 typedef struct s_ray
 {
-	t_vector	n;
+	t_vector	direction;
+	t_vector	pos;
+}	t_ray;
+
+typedef struct s_luv
+{
 	t_vector	u;
 	t_vector	v;
 	t_vector	l;
-	t_vector	s;
-	t_vector	direction;
-	t_vector	pos;
-	double		d;
-}	t_ray;
+}	t_luv;
 
 typedef struct s_minirt
 {
