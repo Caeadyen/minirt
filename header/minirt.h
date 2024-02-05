@@ -6,7 +6,7 @@
 /*   By: hrings <hrings@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/29 11:56:39 by hrings            #+#    #+#             */
-/*   Updated: 2024/02/05 15:36:39 by hrings           ###   ########.fr       */
+/*   Updated: 2024/02/05 16:39:28 by hrings           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,6 +146,14 @@ typedef struct s_luv
 	t_vector	l;
 }	t_luv;
 
+typedef struct s_color
+{
+	int	r;
+	int	g;
+	int	b;
+	int	a;
+}	t_color;
+
 typedef struct s_minirt
 {
 	char		*filename;
@@ -171,7 +179,7 @@ typedef struct s_minirt
 //draw.c
 void		drawing(t_minirt *minirt);
 //raytracing.c
-int			raytracing(t_minirt *minirt, t_ray *ray);
+t_color		raytracing(t_minirt *minirt, t_ray *ray);
 t_hit		check_sphere_hit(t_ray *ray, t_object *obj);
 //cleanup.c
 void		cleanup(t_object *object);
@@ -207,6 +215,9 @@ int			get_r(int trgb);
 int			get_g(int trgb);
 int			get_b(int trgb);
 int			get_rgba(int r, int g, int b, int a);
+t_color 	initcolor(void);
+void	 	addcolor(t_color *a, t_color b);
+int			decodecolor(t_color *color);
 //cylinder.c
 t_hit		check_cylinder_hit(t_ray *ray, t_object *obj);
 void		cal_ino_cylinder(t_cylinder *cylinder);
@@ -229,8 +240,8 @@ t_vector	*parsevector(t_minirt *minirt, char *str, int error);
 //addobject.c
 void		addobj(t_minirt *minirt, char *line, enum e_obj_type type);
 //shading.c
-int			addambientlight(t_minirt *minirt, int objectcolor, int color);
-int			getdiffuselight(t_light *light, t_vector *normal, t_vector *dir, int color);
+t_color		addambientlight(t_minirt *minirt, int objectcolor, t_color *color);
+t_color		getdiffuselight(t_light *light, t_vector *normal, t_vector *dir, int color);
 //shadow.c
 bool		isinshadow(t_minirt *minirt, t_ray *ray);
 

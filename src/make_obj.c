@@ -6,16 +6,16 @@
 /*   By: hrings <hrings@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 14:23:37 by hrings            #+#    #+#             */
-/*   Updated: 2024/02/02 20:56:17 by hrings           ###   ########.fr       */
+/*   Updated: 2024/02/05 16:40:14 by hrings           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minirt.h>
 
-t_sphere *make_sphere(t_vector *position, double dia, int color)
+t_sphere	*make_sphere(t_vector *position, double dia, int color)
 {
 	t_sphere	*sphere;
-	
+
 	sphere = (t_sphere *)malloc(sizeof(t_sphere));
 	if (!sphere)
 		return (NULL);
@@ -25,10 +25,10 @@ t_sphere *make_sphere(t_vector *position, double dia, int color)
 	return (sphere);
 }
 
-t_cylinder *make_cylinder(t_vector *position, t_vector *direction, t_info info)
+t_cylinder	*make_cylinder(t_vector *position, t_vector *direction, t_info info)
 {
 	t_cylinder	*cylinder;
-	
+
 	cylinder = (t_cylinder *)malloc(sizeof(t_cylinder));
 	if (!cylinder)
 		return (NULL);
@@ -41,7 +41,7 @@ t_cylinder *make_cylinder(t_vector *position, t_vector *direction, t_info info)
 	return (cylinder);
 }
 
-t_plane *make_plane(t_vector *position, t_vector *normal, int color)
+t_plane	*make_plane(t_vector *position, t_vector *normal, int color)
 {
 	t_plane	*result;
 

@@ -6,7 +6,7 @@
 /*   By: hrings <hrings@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/29 12:00:09 by hrings            #+#    #+#             */
-/*   Updated: 2024/02/03 15:08:12 by hrings           ###   ########.fr       */
+/*   Updated: 2024/02/05 16:40:33 by hrings           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,4 +92,3 @@ static void	initminirt(t_minirt *minirt)
 	minirt->up_vector->y = 1;
 	minirt->up_vector->z = 0;
 }
-

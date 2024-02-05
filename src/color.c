@@ -6,7 +6,7 @@
 /*   By: hrings <hrings@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 15:54:29 by hrings            #+#    #+#             */
-/*   Updated: 2024/02/04 21:17:06 by hrings           ###   ########.fr       */
+/*   Updated: 2024/02/05 16:39:17 by hrings           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,4 +39,28 @@ int	get_a(int rgba)
 int	get_rgba(int r, int g, int b, int a)
 {
 	return (r << 24 | g << 16 | b << 8 | a);
+}
+
+t_color	initcolor(void)
+{
+	t_color	result;
+
+	result.r = 0;
+	result.b = 0;
+	result.g = 0;
+	result.a = 255;
+	return (result);
+}
+
+void	addcolor(t_color *a, t_color b)
+{
+	a->r += b.r;
+	a->b += b.b;
+	a->g += b.g;
+	a->a += b.a;
+}
+
+int	decodecolor(t_color *color)
+{
+	return (get_rgba(color->r, color->g, color->b, color->a));
 }

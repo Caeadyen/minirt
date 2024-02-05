@@ -6,21 +6,20 @@
 /*   By: hrings <hrings@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/29 15:58:12 by hrings            #+#    #+#             */
-/*   Updated: 2024/02/05 15:46:16 by hrings           ###   ########.fr       */
+/*   Updated: 2024/02/05 16:40:55 by hrings           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minirt.h>
 
 static t_vector	init_ray_dir(t_minirt *minirt, t_luv *luv, int x, int y);
-static double	get_d(t_minirt *minirt);
 static t_luv	generateluv(t_minirt *minirt);
 
 void	drawing(t_minirt *minirt)
 {
 	int		i;
 	int		j;
-	int		color;
+	t_color	color;
 	t_ray	ray;
 	t_luv	luv;
 
@@ -32,9 +31,10 @@ void	drawing(t_minirt *minirt)
 	{
 		while (j < minirt->height)
 		{
+			color = initcolor();
 			ray.direction = init_ray_dir(minirt, &luv, j, i);
-			color = raytracing(minirt, &ray);
-			mlx_put_pixel(minirt->img, i, j, color);
+			addcolor(&color, raytracing(minirt, &ray));
+			mlx_put_pixel(minirt->img, i, j, decodecolor(&color));
 			j++;
 		}
 		j = 0;
@@ -60,14 +60,6 @@ static t_vector	init_ray_dir(t_minirt *minirt, t_luv *luv, int row, int col)
 	return (direction);
 }
 
-static double	get_d(t_minirt *minirt)
-{
-	double	result;
-
-	result = minirt->width / (2 * tan(minirt->camera->fov * (M_PI / 180) / 2));
-	return (result);
-}
-
 static t_luv	generateluv(t_minirt *minirt)
 {
 	t_luv		luv;
@@ -81,7 +73,7 @@ static t_luv	generateluv(t_minirt *minirt)
 	luv.u = cross_vector(minirt->up_vector, &normal);
 	norm_vector(&luv.u);
 	luv.v = cross_vector(&normal, &luv.u);
-	distance = get_d(minirt);
+	distance = minirt->width / (2 * tan(minirt->camera->fov * (M_PI / 180) / 2));
 	b = pointonline(minirt->camera->position, minirt->camera->orientation, distance);
 	a = scalar_product(&luv.u, minirt->width / 2);
 	luv.l = sub_vector(&b, &a);
