@@ -6,7 +6,7 @@
 /*   By: hrings <hrings@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/29 15:58:12 by hrings            #+#    #+#             */
-/*   Updated: 2024/02/05 17:51:36 by hrings           ###   ########.fr       */
+/*   Updated: 2024/02/06 16:10:06 by hrings           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	drawing(t_minirt *minirt)
 			while (sample < SAMPLESIZE)
 			{
 				ray.direction = init_ray_dir(minirt, &luv, j, i);
-				addcolor(&color, raytracing(minirt, &ray));
+				addcolor(&color, raytracing(minirt, &ray, MAXRAYDEPTH));
 				++sample;
 			}
 			averagecolor(&color, SAMPLESIZE);
@@ -47,6 +47,7 @@ void	drawing(t_minirt *minirt)
 		j = 0;
 		i++;
 	}
+	printf("done drawing ...\n");
 	mlx_image_to_window(minirt->mlx, minirt->img, 0, 0);
 }
 

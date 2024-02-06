@@ -6,7 +6,7 @@
 /*   By: hrings <hrings@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/29 11:56:39 by hrings            #+#    #+#             */
-/*   Updated: 2024/02/05 17:59:42 by hrings           ###   ########.fr       */
+/*   Updated: 2024/02/06 22:33:55 by hrings           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,10 @@
 # define WIDTH 1440
 # define HEIGHT 900
 # define EPSILON 1e-6
-# define SAMPLESIZE 3
+# define SAMPLESIZE 5
 # define SEED 42
+# define MAXRAYDEPTH 5
+
 enum e_obj_type
 {
 	NONE,
@@ -47,12 +49,32 @@ enum e_hit_typ
 	OUTSIDE
 };
 
-typedef struct s_info
+enum e_material_type
+{
+	NORMAL,
+	POLISHED
+};
+
+typedef struct s_info_cy
 {
 	double	dia;
 	double	height;
 	int		color;
-}	t_info;
+	int		mat;
+}	t_info_cy;
+
+typedef struct s_info_sp
+{
+	double	dia;
+	int		color;
+	int		mat;
+}	t_info_sp;
+
+typedef struct s_info_pl
+{
+	int		color;
+	int		mat;
+}	t_info_pl;
 
 typedef struct s_vector
 {
@@ -99,6 +121,7 @@ typedef struct s_sphere
 	t_vector	*position;
 	double		diameter;
 	int			color;
+	int			material;
 }	t_sphere;
 
 typedef struct s_cylinder
@@ -111,6 +134,7 @@ typedef struct s_cylinder
 	t_vector	*top;
 	t_vector	*base;
 	t_vector	*axis;
+	int			material;
 }	t_cylinder;
 
 typedef struct s_plane
@@ -118,6 +142,7 @@ typedef struct s_plane
 	t_vector	*position;
 	t_vector	*normal;
 	int			color;
+	int			material;
 }	t_plane;
 
 typedef struct s_object
@@ -180,7 +205,7 @@ typedef struct s_minirt
 //draw.c
 void		drawing(t_minirt *minirt);
 //raytracing.c
-t_color		raytracing(t_minirt *minirt, t_ray *ray);
+t_color		raytracing(t_minirt *minirt, t_ray *ray, int depth);
 t_hit		check_sphere_hit(t_ray *ray, t_object *obj);
 //cleanup.c
 void		cleanup(t_object *object);
@@ -208,9 +233,9 @@ bool		checknormalized(t_vector *v);
 t_vector	pointonline(t_vector *pos, t_vector *dir, double para);
 double		distance(t_vector *a, t_vector *b);
 //make_obj
-t_sphere	*make_sphere(t_vector *position, double dia, int color);
-t_cylinder	*make_cylinder(t_vector *position, t_vector *direction, t_info info);
-t_plane		*make_plane(t_vector *position, t_vector *normal, int color);
+t_sphere	*make_sphere(t_vector *position, t_info_sp info);
+t_cylinder	*make_cylinder(t_vector *position, t_vector *direction, t_info_cy info);
+t_plane	*make_plane(t_vector *position, t_vector *normal, t_info_pl info);
 //color.c
 int			get_a(int trgb);
 int			get_r(int trgb);

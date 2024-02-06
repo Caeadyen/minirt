@@ -6,7 +6,7 @@
 /*   By: hrings <hrings@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/31 12:02:29 by hrings            #+#    #+#             */
-/*   Updated: 2024/02/04 21:19:37 by hrings           ###   ########.fr       */
+/*   Updated: 2024/02/06 14:03:56 by hrings           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,4 +51,7 @@
 # define CYLINDERDIA 35
 # define CYLINDERHEIGHT 36
 # define CYLINDERCOLOR 37
+# define SPAREMAT 38
+# define PLANEMAT 39
+# define CYLINDERMAT 40
 #endif

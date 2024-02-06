@@ -6,13 +6,13 @@
 /*   By: hrings <hrings@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 14:23:37 by hrings            #+#    #+#             */
-/*   Updated: 2024/02/05 16:40:14 by hrings           ###   ########.fr       */
+/*   Updated: 2024/02/06 14:06:03 by hrings           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <minirt.h>
 
-t_sphere	*make_sphere(t_vector *position, double dia, int color)
+t_sphere	*make_sphere(t_vector *position, t_info_sp info)
 {
 	t_sphere	*sphere;
 
@@ -20,12 +20,13 @@ t_sphere	*make_sphere(t_vector *position, double dia, int color)
 	if (!sphere)
 		return (NULL);
 	sphere->position = position;
-	sphere->diameter = dia;
-	sphere->color = color;
+	sphere->diameter = info.dia;
+	sphere->color = info.color;
+	sphere->material = info.mat;
 	return (sphere);
 }
 
-t_cylinder	*make_cylinder(t_vector *position, t_vector *direction, t_info info)
+t_cylinder	*make_cylinder(t_vector *position, t_vector *direction, t_info_cy info)
 {
 	t_cylinder	*cylinder;
 
@@ -37,11 +38,12 @@ t_cylinder	*make_cylinder(t_vector *position, t_vector *direction, t_info info)
 	cylinder->diameter = info.dia;
 	cylinder->height = info.height;
 	cylinder->color = info.color;
+	cylinder->material = info.mat;
 	cal_ino_cylinder(cylinder);
 	return (cylinder);
 }
 
-t_plane	*make_plane(t_vector *position, t_vector *normal, int color)
+t_plane	*make_plane(t_vector *position, t_vector *normal, t_info_pl info)
 {
 	t_plane	*result;
 
@@ -50,6 +52,7 @@ t_plane	*make_plane(t_vector *position, t_vector *normal, int color)
 		exit(1);
 	result->position = position;
 	result->normal = normal;
-	result->color = color;
+	result->color = info.color;
+	result->material = info.mat;
 	return (result);
 }

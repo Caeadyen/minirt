@@ -6,7 +6,7 @@
 /*   By: hrings <hrings@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 11:43:55 by hrings            #+#    #+#             */
-/*   Updated: 2024/02/05 17:30:19 by hrings           ###   ########.fr       */
+/*   Updated: 2024/02/06 22:42:39 by hrings           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,17 +17,27 @@ static t_hit	get_t(double b, double dis);
 static t_color	getspherecolor(t_minirt *minirt, t_ray *ray, t_hit *hit);
 static t_color	getplanecolor(t_minirt *minirt, t_ray *ray, t_hit *hit);
 static t_color	getcylindercolor(t_minirt *minirt, t_ray *ray, t_hit *hit);
+static int		gethitmat(t_hit *hit);
+static t_ray	newray(t_ray *ray, t_hit *hit);
 
-t_color	raytracing(t_minirt *minirt, t_ray *ray)
+t_color	raytracing(t_minirt *minirt, t_ray *ray, int depth)
 {
 	t_lst_obj	*current;
 	t_object	*obj;
 	t_hit		hit;
 	t_hit		min_hit;
+	int			mat;
+	t_ray		secray;
+	t_color		result;
+	t_color		light;
 
+	if (depth <= 0)
+		return (initcolor());
+	result = initcolor();
 	current = minirt->objects;
 	min_hit.distance = INFINITY;
 	min_hit.type = NO;
+	min_hit.hit = NULL;
 	hit.type = NO;
 	hit.distance = INFINITY;
 	while (current)
@@ -47,11 +57,71 @@ t_color	raytracing(t_minirt *minirt, t_ray *ray)
 		}
 		current = current->next;
 	}
-	if (min_hit.type)
-		return (get_color(minirt, ray, &min_hit));
-	return (initcolor());
+	if (!min_hit.type)
+		return result;
+	mat = gethitmat(&min_hit);
+	if (mat == NORMAL)
+		addcolor(&result, get_color(minirt, ray, &min_hit));
+	else if (mat == POLISHED)
+	{
+		secray = newray(ray, &min_hit);
+		light = raytracing(minirt, &secray, depth - 1);
+		averagecolor(&light, 2);
+		addcolor(&result, light);
+	}
+	return result;
 }
 
+static t_ray	newray(t_ray *ray, t_hit *hit)
+{
+	t_ray	result;
+	t_sphere	*sphere;
+	t_plane		*plane;
+	t_cylinder	*cylinder;
+	t_vector	normal;
+	double		len;
+
+	result.pos = pointonline(&ray->pos, &ray->direction, hit->distance);
+	
+	if (hit->hit->type == SPHERE)
+	{
+		sphere = hit->hit->specs;
+		normal = sub_vector(&result.pos, sphere->position);
+		norm_vector(&normal);
+	}
+	else if (hit->hit->type == CYLINDER)
+	{
+		cylinder = hit->hit->specs;
+		if (hit->type == MANTLE)
+		{
+			normal = sub_vector(&result.pos, cylinder->base);
+			normal = scalar_product(cylinder->axis, dot_product(&normal, cylinder->axis));
+			normal = add_vector(cylinder->base, &normal);
+			normal = sub_vector(&result.pos, &normal);
+			norm_vector(&normal);
+		}
+		else if (hit->type == TOP)
+			normal = scalar_product(cylinder->direction, 1);
+		else if (hit->type == BASE)
+			normal = scalar_product(cylinder->direction, -1);
+	}
+	else if (hit->hit->type == PLANE)
+	{
+		plane = hit->hit->specs;
+		if (dot_product(&ray->direction, plane->normal) < 0)
+			normal = scalar_product(plane->normal, 1);
+		else
+			normal = scalar_product(plane->normal, -1);
+	}
+	else
+		exit(1);
+	result.pos = pointonline(&result.pos, &normal, EPSILON);
+	len = dot_product(&ray->direction, &normal) * 2;
+	result.direction = scalar_product(&normal, len);
+	result.direction = sub_vector(&ray->direction, &result.direction);
+	return (result);
+	
+}
 t_hit	check_sphere_hit(t_ray *ray, t_object *obj)
 {
 	t_sphere	*sphere;
@@ -188,4 +258,30 @@ static t_color	getcylindercolor(t_minirt *minirt, t_ray *ray, t_hit *hit)
 	else
 		result = getdiffuselight(minirt->light, &normal, &lightray.direction, cylinder->color);
 	return (addambientlight(minirt, cylinder->color, &result));
+}
+
+static int	gethitmat(t_hit *hit)
+{
+	t_sphere	*sphere;
+	t_plane		*plane;
+	t_cylinder	*cylinder;
+	
+	if (!hit->type)
+		return (0);
+	else if (hit->hit->type == SPHERE)
+	{
+		sphere = hit->hit->specs;
+		return (sphere->material);
+	}
+	else if (hit->hit->type == CYLINDER)
+	{
+		cylinder = hit->hit->specs;
+		return (cylinder->material);
+	}
+	else if (hit->hit->type == PLANE)
+	{
+		plane = hit->hit->specs;
+		return (plane->material);
+	}
+	return (-1);
 }

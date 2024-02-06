@@ -6,7 +6,7 @@
 /*   By: hrings <hrings@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 15:54:29 by hrings            #+#    #+#             */
-/*   Updated: 2024/02/05 17:49:42 by hrings           ###   ########.fr       */
+/*   Updated: 2024/02/06 19:31:17 by hrings           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,5 +68,26 @@ void	addcolor(t_color *a, t_color b)
 
 int	decodecolor(t_color *color)
 {
-	return (get_rgba(color->r, color->g, color->b, color->a));
+	int	r;
+	int	g;
+	int	b;
+	int	a;
+
+	if (color->r > 255)
+		r = 255;
+	else
+		r = color->r;
+	if (color->g > 255)
+		g = 255;
+	else
+		g = color->g;
+	if (color->b > 255)
+		b = 255;
+	else
+		b = color->b;
+	if (color->a > 255)
+		a = 255;
+	else
+		a = 255;	
+	return (get_rgba(r, g, b, a));
 }
