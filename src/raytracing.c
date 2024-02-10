@@ -6,7 +6,7 @@
 /*   By: hrings <hrings@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 11:43:55 by hrings            #+#    #+#             */
-/*   Updated: 2024/02/06 22:42:39 by hrings           ###   ########.fr       */
+/*   Updated: 2024/02/10 18:06:06 by hrings           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ t_color	raytracing(t_minirt *minirt, t_ray *ray, int depth)
 		current = current->next;
 	}
 	if (!min_hit.type)
-		return result;
+		return (result);
 	mat = gethitmat(&min_hit);
 	if (mat == NORMAL)
 		addcolor(&result, get_color(minirt, ray, &min_hit));
@@ -69,12 +69,12 @@ t_color	raytracing(t_minirt *minirt, t_ray *ray, int depth)
 		averagecolor(&light, 2);
 		addcolor(&result, light);
 	}
-	return result;
+	return (result);
 }
 
 static t_ray	newray(t_ray *ray, t_hit *hit)
 {
-	t_ray	result;
+	t_ray		result;
 	t_sphere	*sphere;
 	t_plane		*plane;
 	t_cylinder	*cylinder;
@@ -82,7 +82,6 @@ static t_ray	newray(t_ray *ray, t_hit *hit)
 	double		len;
 
 	result.pos = pointonline(&ray->pos, &ray->direction, hit->distance);
-	
 	if (hit->hit->type == SPHERE)
 	{
 		sphere = hit->hit->specs;
@@ -120,8 +119,8 @@ static t_ray	newray(t_ray *ray, t_hit *hit)
 	result.direction = scalar_product(&normal, len);
 	result.direction = sub_vector(&ray->direction, &result.direction);
 	return (result);
-	
 }
+
 t_hit	check_sphere_hit(t_ray *ray, t_object *obj)
 {
 	t_sphere	*sphere;
@@ -182,18 +181,15 @@ static t_hit	get_t(double b, double dis)
 static t_color	getspherecolor(t_minirt *minirt, t_ray *ray, t_hit *hit)
 {
 	t_sphere	*sphere;
-	t_vector	tmp;
 	t_vector	normal;
 	t_ray		lightray;
 	t_color		result;
 
 	sphere = (t_sphere *)hit->hit->specs;
-	tmp = scalar_product(&ray->direction, hit->distance);
-	lightray.pos = add_vector(&ray->pos, &tmp);
+	lightray.pos = pointonline(&ray->pos, &ray->direction, hit->distance);
 	normal = sub_vector(&lightray.pos, sphere->position);
 	norm_vector(&normal);
-	tmp = scalar_product(&normal, EPSILON);
-	lightray.pos = add_vector(&lightray.pos, &tmp);
+	lightray.pos = pointonline(&lightray.pos, &normal, EPSILON);
 	lightray.direction = sub_vector(minirt->light->position, &lightray.pos);
 	norm_vector(&lightray.direction);
 	if (isinshadow(minirt, &lightray))
@@ -206,7 +202,6 @@ static t_color	getspherecolor(t_minirt *minirt, t_ray *ray, t_hit *hit)
 static t_color	getplanecolor(t_minirt *minirt, t_ray *ray, t_hit *hit)
 {
 	t_plane		*plane;
-	t_vector	tmp;
 	t_ray		lightray;
 	t_vector	normal;
 	t_color		result;
@@ -216,10 +211,8 @@ static t_color	getplanecolor(t_minirt *minirt, t_ray *ray, t_hit *hit)
 		normal = scalar_product(plane->normal, 1);
 	else
 		normal = scalar_product(plane->normal, -1);
-	tmp = scalar_product(&ray->direction, hit->distance);
-	lightray.pos = add_vector(&ray->pos, &tmp);
-	tmp = scalar_product(&normal, EPSILON);
-	lightray.pos = add_vector(&lightray.pos, &tmp);
+	lightray.pos = pointonline(&ray->pos, &ray->direction, hit->distance);
+	lightray.pos = pointonline(&lightray.pos, &normal, EPSILON);
 	lightray.direction = sub_vector(minirt->light->position, &lightray.pos);
 	norm_vector(&lightray.direction);
 	if (isinshadow(minirt, &lightray))
@@ -265,7 +258,7 @@ static int	gethitmat(t_hit *hit)
 	t_sphere	*sphere;
 	t_plane		*plane;
 	t_cylinder	*cylinder;
-	
+
 	if (!hit->type)
 		return (0);
 	else if (hit->hit->type == SPHERE)
