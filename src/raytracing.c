@@ -6,7 +6,7 @@
 /*   By: hrings <hrings@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/10 11:43:55 by hrings            #+#    #+#             */
-/*   Updated: 2024/02/10 18:06:06 by hrings           ###   ########.fr       */
+/*   Updated: 2024/02/12 01:33:48 by hrings           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,12 @@ static t_color	getplanecolor(t_minirt *minirt, t_ray *ray, t_hit *hit);
 static t_color	getcylindercolor(t_minirt *minirt, t_ray *ray, t_hit *hit);
 static int		gethitmat(t_hit *hit);
 static t_ray	newray(t_ray *ray, t_hit *hit);
+static t_colors	initresultcolor(void);
+static t_color	sumuplights(t_colors *colors);
+static t_vector	reflection(t_ray *ray, t_vector *normal);
+static t_color	getdiffuselightsp(t_light *light, t_vectors *vectors, t_sphere *sphere);
+static t_color	getdiffuselightpl(t_light *light, t_vectors *vectors, t_plane *plane);
+static t_color	getdiffuselightcy(t_light *light, t_vectors *vectors, t_cylinder *cylinder);
 
 t_color	raytracing(t_minirt *minirt, t_ray *ray, int depth)
 {
@@ -28,12 +34,13 @@ t_color	raytracing(t_minirt *minirt, t_ray *ray, int depth)
 	t_hit		min_hit;
 	int			mat;
 	t_ray		secray;
-	t_color		result;
 	t_color		light;
+	t_colors	result;
+	
 
 	if (depth <= 0)
 		return (initcolor());
-	result = initcolor();
+	result = initresultcolor();
 	current = minirt->objects;
 	min_hit.distance = INFINITY;
 	min_hit.type = NO;
@@ -58,18 +65,28 @@ t_color	raytracing(t_minirt *minirt, t_ray *ray, int depth)
 		current = current->next;
 	}
 	if (!min_hit.type)
-		return (result);
+		return (initcolor());
 	mat = gethitmat(&min_hit);
 	if (mat == NORMAL)
-		addcolor(&result, get_color(minirt, ray, &min_hit));
-	else if (mat == POLISHED)
+	{
+		result.phong = get_color(minirt, ray, &min_hit);
+	}
+		
+	else if (mat == REFLECTIVE)
 	{
 		secray = newray(ray, &min_hit);
 		light = raytracing(minirt, &secray, depth - 1);
 		averagecolor(&light, 2);
-		addcolor(&result, light);
+		result.reflect = light;
 	}
-	return (result);
+	else if (mat == REFRACTIVE)
+	{
+		secray = newray(ray, &min_hit);
+		light = raytracing(minirt, &secray, depth - 1);
+		averagecolor(&light, 2);
+		result.refracted = light;
+	}
+	return (sumuplights(&result));
 }
 
 static t_ray	newray(t_ray *ray, t_hit *hit)
@@ -181,51 +198,65 @@ static t_hit	get_t(double b, double dis)
 static t_color	getspherecolor(t_minirt *minirt, t_ray *ray, t_hit *hit)
 {
 	t_sphere	*sphere;
-	t_vector	normal;
 	t_ray		lightray;
 	t_color		result;
-
+	t_vectors	tmp;
+	
 	sphere = (t_sphere *)hit->hit->specs;
 	lightray.pos = pointonline(&ray->pos, &ray->direction, hit->distance);
-	normal = sub_vector(&lightray.pos, sphere->position);
-	norm_vector(&normal);
-	lightray.pos = pointonline(&lightray.pos, &normal, EPSILON);
+	tmp.norm = sub_vector(&lightray.pos, sphere->position);
+	norm_vector(&tmp.norm);
+	lightray.pos = pointonline(&lightray.pos, &tmp.norm, EPSILON);
 	lightray.direction = sub_vector(minirt->light->position, &lightray.pos);
 	norm_vector(&lightray.direction);
 	if (isinshadow(minirt, &lightray))
+	{
 		result = initcolor();
+	}
 	else
-		result = getdiffuselight(minirt->light, &normal, &lightray.direction, sphere->color);
-	return (addambientlight(minirt, sphere->color, &result));
+	{
+		tmp.reflec = reflection(&lightray, &tmp.norm);
+		tmp.light = lightray.direction;
+		tmp.dir = ray->direction;
+		result = getdiffuselightsp(minirt->light, &tmp, sphere);
+	}
+	return (addambientlight(minirt, sphere->ka, sphere->color, &result));
 }
 
 static t_color	getplanecolor(t_minirt *minirt, t_ray *ray, t_hit *hit)
 {
 	t_plane		*plane;
 	t_ray		lightray;
-	t_vector	normal;
 	t_color		result;
+	t_vectors	tmp;
 
 	plane = (t_plane *)hit->hit->specs;
 	if (dot_product(&ray->direction, plane->normal) < 0)
-		normal = scalar_product(plane->normal, 1);
+		tmp.norm = scalar_product(plane->normal, 1);
 	else
-		normal = scalar_product(plane->normal, -1);
+		tmp.norm = scalar_product(plane->normal, -1);
 	lightray.pos = pointonline(&ray->pos, &ray->direction, hit->distance);
-	lightray.pos = pointonline(&lightray.pos, &normal, EPSILON);
+	lightray.pos = pointonline(&lightray.pos, &tmp.norm, EPSILON);
 	lightray.direction = sub_vector(minirt->light->position, &lightray.pos);
 	norm_vector(&lightray.direction);
 	if (isinshadow(minirt, &lightray))
+	{
 		result = initcolor();
+	}
 	else
-		result = getdiffuselight(minirt->light, &normal, &lightray.direction, plane->color);
-	return (addambientlight(minirt, plane->color, &result));
+	{
+		tmp.reflec = reflection(&lightray, &tmp.norm);
+		tmp.light = lightray.direction;
+		tmp.dir = ray->direction;
+		result = getdiffuselightpl(minirt->light, &tmp, plane);
+	}
+	return (addambientlight(minirt, plane->ka, plane->color, &result));
 }
 
 static t_color	getcylindercolor(t_minirt *minirt, t_ray *ray, t_hit *hit)
 {
 	t_cylinder	*cylinder;	
-	t_vector	normal;
+	t_vectors	tmp;
 	t_ray		lightray;
 	t_color		result;
 
@@ -235,22 +266,29 @@ static t_color	getcylindercolor(t_minirt *minirt, t_ray *ray, t_hit *hit)
 	norm_vector(&lightray.direction);
 	if (hit->type == MANTLE)
 	{
-		normal = sub_vector(&lightray.pos, cylinder->base);
-		normal = scalar_product(cylinder->axis, dot_product(&normal, cylinder->axis));
-		normal = add_vector(cylinder->base, &normal);
-		normal = sub_vector(&lightray.pos, &normal);
-		norm_vector(&normal);
+		tmp.norm = sub_vector(&lightray.pos, cylinder->base);
+		tmp.norm = scalar_product(cylinder->axis, dot_product(&tmp.norm, cylinder->axis));
+		tmp.norm = add_vector(cylinder->base, &tmp.norm);
+		tmp.norm = sub_vector(&lightray.pos, &tmp.norm);
+		norm_vector(&tmp.norm);
 	}
 	else if (hit->type == TOP)
-		normal = scalar_product(cylinder->direction, 1);
+		tmp.norm = scalar_product(cylinder->direction, 1);
 	else if (hit->type == BASE)
-		normal = scalar_product(cylinder->direction, -1);
-	lightray.pos = pointonline(&lightray.pos, &normal, EPSILON);
+		tmp.norm = scalar_product(cylinder->direction, -1);
+	lightray.pos = pointonline(&lightray.pos, &tmp.norm, EPSILON);
 	if (isinshadow(minirt, &lightray))
+	{
 		result = initcolor();
+	}
 	else
-		result = getdiffuselight(minirt->light, &normal, &lightray.direction, cylinder->color);
-	return (addambientlight(minirt, cylinder->color, &result));
+	{
+		tmp.reflec = reflection(&lightray, &tmp.norm);
+		tmp.light = lightray.direction;
+		tmp.dir = ray->direction;
+		result = getdiffuselightcy(minirt->light, &tmp, cylinder);
+	}
+	return (addambientlight(minirt, cylinder->ka, cylinder->color, &result));
 }
 
 static int	gethitmat(t_hit *hit)
@@ -277,4 +315,99 @@ static int	gethitmat(t_hit *hit)
 		return (plane->material);
 	}
 	return (-1);
+}
+
+static t_colors	initresultcolor(void)
+{
+	t_colors	result;
+
+	result.phong = initcolor();
+	result.reflect = initcolor();
+	result.refracted = initcolor();
+	return (result);
+}
+
+static t_color	sumuplights(t_colors *colors)
+{
+	t_color	result;
+
+	result.r = colors->phong.r + colors->reflect.r + colors->refracted.r;
+	if (result.r > 255)
+		result.r = 255;
+	result.g = colors->phong.g + colors->reflect.g + colors->refracted.g;
+	if (result.g > 255)
+		result.g = 255;
+	result.b = colors->phong.b + colors->reflect.b + colors->refracted.b;
+	if (result.b > 255)
+		result.b = 255;
+	result.a = colors->phong.a + colors->reflect.a + colors->refracted.a;
+	if (result.a > 255)
+		result.a = 255;
+	return (result);
+}
+
+static t_vector	reflection(t_ray *ray, t_vector *normal)
+{
+	t_vector	result;
+	double		len;
+
+	len = dot_product(&ray->direction, normal) * 2;
+	result = scalar_product(normal, len);
+	result = sub_vector(&ray->direction, &result);
+	norm_vector(&result);
+	return (result);
+}
+
+static t_color	getdiffuselightsp(t_light *light, t_vectors *vectors, t_sphere *sphere)
+{
+	t_color	result;
+	t_color	specclight;
+	double	diffuse;
+	double	specc;
+
+	diffuse = max_double(0, dot_product(&vectors->light, &vectors->norm) * sphere->kd);
+	specc = max_double(0, pow(dot_product(&vectors->reflec, &vectors->dir), sphere->n) * ((sphere->n + 2) / (2 * M_PI)) * sphere->ks);
+	result = initcolorvalue(sphere->color);
+	specclight = initcolorvalue(light->color);
+	result.r = specclight.r * (diffuse * result.r / 255 + specc);
+	result.g = specclight.g * (diffuse * result.g / 255 + specc);
+	result.b = specclight.b * (diffuse * result.b / 255 + specc);
+	result.a = 255;
+	return (result);
+}
+
+static t_color	getdiffuselightpl(t_light *light, t_vectors *vectors, t_plane *plane)
+{
+	t_color	result;
+	t_color	specclight;
+	double	diffuse;
+	double	specc;
+
+	diffuse = max_double(0, dot_product(&vectors->light, &vectors->norm) * plane->kd);
+	specc = max_double(0, pow(dot_product(&vectors->reflec, &vectors->dir), plane->n) * ((plane->n + 2) / (2 * M_PI)) * plane->ks);
+	result = initcolorvalue(plane->color);
+	specclight = initcolorvalue(light->color);
+	result.r = specclight.r * (diffuse * result.r / 255 + specc);
+	result.g = specclight.g * (diffuse * result.g / 255 + specc);
+	result.b = specclight.b * (diffuse * result.b / 255 + specc);
+	result.a = 255;
+	return (result);
+}
+
+static t_color	getdiffuselightcy(t_light *light, t_vectors *vectors, t_cylinder *cylinder)
+{
+	t_color	result;
+	t_color	specclight;
+	double	diffuse;
+	double	specc;
+
+	diffuse = max_double(0, dot_product(&vectors->light, &vectors->norm) * cylinder->kd);
+	specc = max_double(0, pow(dot_product(&vectors->reflec, &vectors->dir), cylinder->n) * ((cylinder->n + 2) / (2 * 3.41)) * cylinder->ks);
+	result = initcolorvalue(cylinder->color);
+	specclight = initcolorvalue(light->color);
+	result.r = specclight.r * (diffuse * result.r / 255 + specc);
+	result.g = specclight.g * (diffuse * result.g / 255 + specc);
+	result.b = specclight.b * (diffuse * result.b / 255 + specc);
+	result.a = 255;
+	return (result);
 }

@@ -6,7 +6,7 @@
 /*   By: hrings <hrings@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/02 16:31:16 by hrings            #+#    #+#             */
-/*   Updated: 2024/02/04 21:03:04 by hrings           ###   ########.fr       */
+/*   Updated: 2024/02/11 19:02:56 by hrings           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,6 +41,22 @@ double	ft_strtof(t_minirt *minirt, char *str, int error)
 	if (*str != 0)
 		minirt->error = error;
 	return (neg * result / (double) power);
+}
+
+int	ft_strtoint(t_minirt *minirt, char *str, int error)
+{
+	int	result;
+
+	result = 0;
+	while (ft_isdigit(*str))
+	{
+		result *= 10;
+		result += *str - '0';
+		++str;
+	}
+	if (*str != 0)
+		minirt->error = error;
+	return (result);
 }
 
 bool	checkdrange(double value, double min, double max)

@@ -6,7 +6,7 @@
 /*   By: hrings <hrings@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/03 18:36:51 by hrings            #+#    #+#             */
-/*   Updated: 2024/02/06 22:11:18 by hrings           ###   ########.fr       */
+/*   Updated: 2024/02/11 23:46:37 by hrings           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,23 +14,16 @@
 
 static int	checkcolor(int num);
 
-t_color	addambientlight(t_minirt *minirt, int objectcolor, t_color *color)
+t_color	addambientlight(t_minirt *minirt, double ambient, int objcolor, t_color *color)
 {
 	t_color	result;
+	double scale;
 
-	result.r = color->r + ((get_r(objectcolor) + \
-		get_r(minirt->amlight->color)) * minirt->amlight->ratio);
-	if (result.r > 255)
-		result.r = 255;
-	result.g = color->g + ((get_g(objectcolor) + \
-		get_g(minirt->amlight->color)) * minirt->amlight->ratio);
-	if (result.g > 255)
-		result.g = 255;
-	result.b = color->b + ((get_b(objectcolor) + \
-		get_b(minirt->amlight->color)) * minirt->amlight->ratio);
-	if (result.b > 255)
-		result.b = 255;
-	result.a = 255;
+	scale = minirt->amlight->ratio * ambient;
+	result.r = get_r(minirt->amlight->color) * get_r(objcolor) * scale / 255 + color->r;
+	result.g = get_g(minirt->amlight->color) * get_g(objcolor) * scale / 255 + color->g;
+	result.b = get_b(minirt->amlight->color) * get_b(objcolor) * scale / 255 + color->b;
+	result.a = get_a(minirt->amlight->color) * get_a(objcolor) * scale / 255 + color->a;
 	return (result);
 }
 

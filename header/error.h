@@ -6,7 +6,7 @@
 /*   By: hrings <hrings@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/31 12:02:29 by hrings            #+#    #+#             */
-/*   Updated: 2024/02/06 14:03:56 by hrings           ###   ########.fr       */
+/*   Updated: 2024/02/11 18:43:52 by hrings           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,4 +54,16 @@
 # define SPAREMAT 38
 # define PLANEMAT 39
 # define CYLINDERMAT 40
+# define PLANEKS 41
+# define PLANEKD 42
+# define PLANEKA 43
+# define PLANEN 44
+# define SPAREKS 45
+# define SPAREKD 46
+# define SPAREKA 47
+# define SPAREN 48
+# define CYLINDERKS 49
+# define CYLINDERKD 50
+# define CYLINDERKA 51
+# define CYLINDERN 52
 #endif

@@ -6,7 +6,7 @@
 /*   By: hrings <hrings@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/02 20:15:38 by hrings            #+#    #+#             */
-/*   Updated: 2024/02/06 20:27:51 by hrings           ###   ########.fr       */
+/*   Updated: 2024/02/11 19:05:36 by hrings           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,9 @@ static t_object	*parseplane(t_minirt *minirt, char *line)
 	if (!object)
 		return (NULL);
 	tmp = ft_split(line + 3, ' ');
-	if (tmp == 0 || tmp[0] == 0 || tmp[1] == 0 || tmp[2] == 0 || tmp[3] == 0 || tmp[4] != 0)
+	if (tmp == 0 || tmp[0] == 0 || tmp[1] == 0 || tmp[2] == 0 || tmp[3] == 0 || tmp[4] == 0)
+		minirt->error = PLANEERROR;
+	else if (tmp[5] == 0 || tmp[6] == 0 || tmp[7] == 0 || tmp[8] != 0)
 		minirt->error = PLANEERROR;
 	else
 	{
@@ -53,6 +55,18 @@ static t_object	*parseplane(t_minirt *minirt, char *line)
 		norm_vector(direction);
 		info.color = parsecolor(minirt, tmp[2], PLANECOLOR);
 		info.mat = parsemat(minirt, tmp[3], PLANEMAT);
+		info.ks = ft_strtof(minirt, tmp[4], PLANEKS);
+		if (checkdrange(info.ks, 0, 1))
+			minirt->error = PLANEKS;
+		info.kd = ft_strtof(minirt, tmp[5], PLANEKD);
+		if (checkdrange(info.kd, 0, 1))
+			minirt->error = PLANEKD;
+		info.ka = ft_strtof(minirt, tmp[6], PLANEKA);
+		if (checkdrange(info.ka, 0, 1))
+			minirt->error = PLANEKA;
+		info.n = ft_strtoint(minirt, tmp[7], PLANEN);
+		if (checkirange(info.n, 0, INT_MAX))
+			minirt->error = PLANEN;
 		object->specs = make_plane(position, direction, info);
 		object->type = PLANE;
 	}
@@ -71,7 +85,9 @@ static t_object	*parsespare(t_minirt *minirt, char *line)
 	if (!object)
 		return (NULL);
 	tmp = ft_split(line + 3, ' ');
-	if (tmp == 0 || tmp[0] == 0 || tmp[1] == 0 || tmp[2] == 0 || tmp[3] == 0 || tmp[4] != 0)
+	if (tmp == 0 || tmp[0] == 0 || tmp[1] == 0 || tmp[2] == 0 || tmp[3] == 0 || tmp[4] == 0)
+		minirt->error = SPAREERROR;
+	else if (tmp[5] == 0 || tmp[6] == 0 || tmp[7] == 0 || tmp[8] != 0)
 		minirt->error = SPAREERROR;
 	else
 	{
@@ -79,6 +95,18 @@ static t_object	*parsespare(t_minirt *minirt, char *line)
 		info.dia = ft_strtof(minirt, tmp[1], SPARECOLOR) / 2;
 		info.color = parsecolor(minirt, tmp[2], SPARECOLOR);
 		info.mat = parsemat(minirt, tmp[3], SPAREMAT);
+		info.ks = ft_strtof(minirt, tmp[4], SPAREKS);
+		if (checkdrange(info.ks, 0, 1))
+			minirt->error = SPAREKS;
+		info.kd = ft_strtof(minirt, tmp[5], SPAREKD);
+		if (checkdrange(info.ks, 0, 1))
+			minirt->error = SPAREKD;
+		info.ka = ft_strtof(minirt, tmp[6], SPAREKA);
+		if (checkdrange(info.ks, 0, 1))
+			minirt->error = SPAREKA;
+		info.n = ft_strtoint(minirt, tmp[7], SPAREN);
+		if (checkirange(info.n, 0, INT_MAX))
+			minirt->error = SPAREN;
 		object->specs = make_sphere(position, info);
 		object->type = SPHERE;
 	}
@@ -98,9 +126,9 @@ static t_object	*parsecylinder(t_minirt *minirt, char *line)
 	if (!object)
 		return (NULL);
 	tmp = ft_split(line + 3, ' ');
-	if (tmp == 0 || tmp[0] == 0 || tmp[1] == 0 || tmp[2] == 0)
+	if (tmp == 0 || tmp[0] == 0 || tmp[1] == 0 || tmp[2] == 0 || tmp[3] == 0 || tmp[4] == 0)
 		minirt->error = SPAREERROR;
-	else if (tmp[3] == 0 || tmp[4] == 0 || tmp[5] == 0 || tmp[6] != 0)
+	else if (tmp[5] == 0 || tmp[6] == 0 || tmp[7] == 0 || tmp[8] == 0 || tmp[9] == 0 || tmp[10] != 0)
 		minirt->error = SPAREERROR;
 	else
 	{
@@ -113,6 +141,18 @@ static t_object	*parsecylinder(t_minirt *minirt, char *line)
 		info.height = ft_strtof(minirt, tmp[3], CYLINDERHEIGHT);
 		info.color = parsecolor(minirt, tmp[4], CYLINDERCOLOR);
 		info.mat = parsemat(minirt, tmp[5], CYLINDERMAT);
+		info.ks = ft_strtof(minirt, tmp[6], CYLINDERKS);
+		if (checkdrange(info.ks, 0, 1))
+			minirt->error = CYLINDERKS;
+		info.kd = ft_strtof(minirt, tmp[7], CYLINDERKD);
+		if (checkdrange(info.ks, 0, 1))
+			minirt->error = CYLINDERKD;
+		info.ka = ft_strtof(minirt, tmp[8], CYLINDERKA);
+		if (checkdrange(info.ks, 0, 1))
+			minirt->error = CYLINDERKA;
+		info.n = ft_strtoint(minirt, tmp[9], CYLINDERN);
+		if (checkirange(info.n, 0, INT_MAX))
+			minirt->error = CYLINDERN;
 		object->specs = make_cylinder(position, direction, info);
 		object->type = CYLINDER;
 	}
@@ -126,6 +166,8 @@ static int	parsemat(t_minirt *minirt, char *line, int error)
 		return (0);
 	if (!ft_strncmp(line, "1", 2))
 		return (1);
+	if (!ft_strncmp(line, "2", 2))
+		return (2);
 	minirt->error = error;
 	return (0);
 }

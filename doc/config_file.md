@@ -37,11 +37,15 @@ An example:
 * x,y,z coordinates of the sphere center
 * the sphere diameter
 * R,G,B colors in range [0-255]
-* materials the sphere is made of: 0 for normal, 1 for polished metal
+* materials the plane is made of: 0 for normal, 1 for reflective and 2 for refactive
+* specular reflection constant, the ratio of reflection of the specular term of incoming light range [0,1]
+* diffuse reflection constant, the ratio of reflection of the diffuse term of incoming light range [0,1]
+* ambient reflection constant, the ratio of reflection of the ambient term present in all points in the scene rendered range [0,1]
+* shininess constant for this material range [0,inf]
 
 An example:
 
-    sp 0,0,5 2 255,255,255 1
+    sp 0,0,5 2 255,255,255 1 0.1 0.2 0.3 2
 
 ### Plane:
 
@@ -49,11 +53,15 @@ An example:
 * x,y,z coordinates of a point in the plane
 * 3d normal vector. In range [-1,1] for each x,y,z axis
 * R,G,B colors in range [0-255]
-* materials the plane is made of: 0 for normal, 1 for polished metal
+* materials the plane is made of: 0 for normal, 1 for reflective and 2 for refactive
+* specular reflection constant, the ratio of reflection of the specular term of incoming light range [0,1]
+* diffuse reflection constant, the ratio of reflection of the diffuse term of incoming light range [0,1]
+* ambient reflection constant, the ratio of reflection of the ambient term present in all points in the scene rendered range [0,1]
+* shininess constant for this material range [0,inf]
 
 An example:
 
-    pl 0,0,5 0,1,1 255,255,255 1
+    pl 0,0,5 0,1,1 255,255,255 1 0.1 0.2 0.3 2
 
 ### Cylinder:
 
@@ -63,8 +71,12 @@ An example:
 * the cylinder diameter
 * the cylinder height
 * R,G,B colors in range [0,255]
-* materials the cylinder is made of: 0 for normal, 1 for polished metal
+* materials the plane is made of: 0 for normal, 1 for reflective and 2 for refactive
+* specular reflection constant, the ratio of reflection of the specular term of incoming light range [0,1]
+* diffuse reflection constant, the ratio of reflection of the diffuse term of incoming light range [0,1]
+* ambient reflection constant, the ratio of reflection of the ambient term present in all points in the scene rendered range [0,1]
+* shininess constant for this material range [0,inf]
 
 An example:
 
-    cy 0,0,2 0,0,1 5 20 0,255,255 1
+    cy 0,0,2 0,0,1 5 20 0,255,255 1 0.1 0.2 0.3 2

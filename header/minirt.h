@@ -6,7 +6,7 @@
 /*   By: hrings <hrings@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/10/29 11:56:39 by hrings            #+#    #+#             */
-/*   Updated: 2024/02/06 22:33:55 by hrings           ###   ########.fr       */
+/*   Updated: 2024/02/12 01:33:38 by hrings           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,13 @@
 # include <libft.h>
 # include <math.h>
 # include <fcntl.h>
+# include <limits.h>
 # include "keys.h"
 # include "error.h"
 # define TITLE "Minirt Project"
-
+# ifndef M_PI
+    #define M_PI 3.14159265358979323846
+# endif
 # define WIDTH 1440
 # define HEIGHT 900
 # define EPSILON 1e-6
@@ -52,7 +55,8 @@ enum e_hit_typ
 enum e_material_type
 {
 	NORMAL,
-	POLISHED
+	REFLECTIVE,
+	REFRACTIVE
 };
 
 typedef struct s_info_cy
@@ -61,6 +65,10 @@ typedef struct s_info_cy
 	double	height;
 	int		color;
 	int		mat;
+	double	ks;
+	double	kd;
+	double	ka;
+	int		n;
 }	t_info_cy;
 
 typedef struct s_info_sp
@@ -68,12 +76,20 @@ typedef struct s_info_sp
 	double	dia;
 	int		color;
 	int		mat;
+	double	ks;
+	double	kd;
+	double	ka;
+	int		n;
 }	t_info_sp;
 
 typedef struct s_info_pl
 {
 	int		color;
 	int		mat;
+	double	ks;
+	double	kd;
+	double	ka;
+	int		n;
 }	t_info_pl;
 
 typedef struct s_vector
@@ -122,6 +138,10 @@ typedef struct s_sphere
 	double		diameter;
 	int			color;
 	int			material;
+	double		ks;
+	double		kd;
+	double		ka;
+	int			n;
 }	t_sphere;
 
 typedef struct s_cylinder
@@ -135,6 +155,10 @@ typedef struct s_cylinder
 	t_vector	*base;
 	t_vector	*axis;
 	int			material;
+	double		ks;
+	double		kd;
+	double		ka;
+	int			n;
 }	t_cylinder;
 
 typedef struct s_plane
@@ -143,6 +167,10 @@ typedef struct s_plane
 	t_vector	*normal;
 	int			color;
 	int			material;
+	double		ks;
+	double		kd;
+	double		ka;
+	int			n;
 }	t_plane;
 
 typedef struct s_object
@@ -179,6 +207,21 @@ typedef struct s_color
 	int	b;
 	int	a;
 }	t_color;
+
+typedef struct s_colors
+{
+	t_color phong;
+	t_color	reflect;
+	t_color	refracted;
+}	t_colors;
+
+typedef struct s_vectors
+{
+	t_vector	norm;
+	t_vector	light;
+	t_vector	reflec;
+	t_vector	dir;
+}	t_vectors;
 
 typedef struct s_minirt
 {
@@ -243,7 +286,9 @@ int			get_g(int trgb);
 int			get_b(int trgb);
 int			get_rgba(int r, int g, int b, int a);
 void		averagecolor(t_color *color, int num);
+void 		multicolor(t_color *color, double num);
 t_color 	initcolor(void);
+t_color		initcolorvalue(int color);
 void	 	addcolor(t_color *a, t_color b);
 int			decodecolor(t_color *color);
 //cylinder.c
@@ -261,6 +306,7 @@ void		addcamera(t_minirt *minirt, char *line);
 void		addlight(t_minirt *minirt, char *line);
 //parser.c
 double		ft_strtof(t_minirt *minirt, char *str, int error);
+int			ft_strtoint(t_minirt *minirt, char *str, int error);
 bool		checkdrange(double value, double min, double max);
 bool		checkirange(int value, int min, int max);
 int			parsecolor(t_minirt *minirt, char *str, int error);
@@ -268,7 +314,7 @@ t_vector	*parsevector(t_minirt *minirt, char *str, int error);
 //addobject.c
 void		addobj(t_minirt *minirt, char *line, enum e_obj_type type);
 //shading.c
-t_color		addambientlight(t_minirt *minirt, int objectcolor, t_color *color);
+t_color	addambientlight(t_minirt *minirt, double ambient, int objcolor, t_color *color);
 t_color		getdiffuselight(t_light *light, t_vector *normal, t_vector *dir, int color);
 //shadow.c
 bool		isinshadow(t_minirt *minirt, t_ray *ray);

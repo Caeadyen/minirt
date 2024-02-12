@@ -6,7 +6,7 @@
 /*   By: hrings <hrings@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/15 15:54:29 by hrings            #+#    #+#             */
-/*   Updated: 2024/02/06 19:31:17 by hrings           ###   ########.fr       */
+/*   Updated: 2024/02/11 22:14:49 by hrings           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,13 @@ void averagecolor(t_color *color, int num)
 	color->b /= num;
 }
 
+void multicolor(t_color *color, double num)
+{
+	color->r *= num;
+	color->g *= num;
+	color->b *= num;
+}
+
 t_color	initcolor(void)
 {
 	t_color	result;
@@ -58,6 +65,18 @@ t_color	initcolor(void)
 	result.a = 255;
 	return (result);
 }
+
+t_color	initcolorvalue(int color)
+{
+	t_color	result;
+
+	result.r = get_r(color);
+	result.b = get_b(color);
+	result.g = get_g(color);
+	result.a = get_a(color);
+	return (result);
+}
+
 
 void	addcolor(t_color *a, t_color b)
 {
